@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class User {
@@ -13,16 +12,17 @@ class User {
   bool? state;
   bool? status;
 
-  User({this.id,
-        this.userName,
-        this.fullName,
-        this.code,
-        this.email,
-        this.image,
-        this.phone,
-        this.address,
-        this.state,
-        this.status});
+  User(
+      {this.id,
+      this.userName,
+      this.fullName,
+      this.code,
+      this.email,
+      this.image,
+      this.phone,
+      this.address,
+      this.state,
+      this.status});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -54,7 +54,8 @@ class User {
 }
 
 Future<dynamic> fetchUser() async {
-  final response = await http.get(Uri.parse('https://swd-back-end.azurewebsites.net/api/partners'));
+  final response = await http
+      .get(Uri.parse('https://swd-back-end.azurewebsites.net/api/partners'));
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
