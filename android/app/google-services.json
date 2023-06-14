@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "30962808635",
+    "project_id": "gadgetzone-49cd4",
+    "storage_bucket": "gadgetzone-49cd4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30962808635:android:45cbfd4b5f27c977dae91e",
+        "android_client_info": {
+          "package_name": "com.example.partner_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "30962808635-udgqnv1chjpfk9f97j5edln8nulbfo29.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCB5XYodv9s_ZEgwkMd1n_ftFFv9Mbcog"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "30962808635-udgqnv1chjpfk9f97j5edln8nulbfo29.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

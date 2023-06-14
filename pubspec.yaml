@@ -1,0 +1,30 @@
+name: partner_mobile
+description: A new Flutter project.
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.0.2 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  font_awesome_flutter: ^10.4.0
+  page_transition: ^2.0.9
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  google_sign_in: ^6.1.2
+  firebase_auth: ^4.6.1
+  http: ^0.13.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/images/products/
