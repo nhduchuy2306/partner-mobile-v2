@@ -9,7 +9,7 @@ class ItemCardWidget extends StatelessWidget {
   final Product item;
 
   final double width = 200;
-  final double height = 400;
+  final double height = 500;
   final Color borderColor = const Color(0xffE2E2E2);
   final double borderRadius = 18;
 
@@ -79,8 +79,8 @@ class ItemCardWidget extends StatelessWidget {
   Widget imageWidget() {
     return Image.network(
       item.picture!,
-      width: 100,
-      height: 200,
+      width: 300,
+      height: 300,
       fit: BoxFit.cover,
     );
   }

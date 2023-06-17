@@ -1,2 +1,2 @@
 //create enum for title
-enum TitleEnum { exclusiveOrder, bestSelling, others }
+enum TitleEnum { bestSelling, latestProduct, categories }
