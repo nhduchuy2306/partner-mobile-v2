@@ -8,11 +8,6 @@ class FeaturedItem {
   FeaturedItem(this.name, this.imagePath);
 }
 
-var featuredItems = [
-  FeaturedItem("Mouses", "assets/images/mouse.png"),
-  FeaturedItem("Monitors", "assets/images/monitor.png"),
-];
-
 class FeaturedCard extends StatelessWidget {
   const FeaturedCard(this.featuredItem,
       {super.key, this.color = AppColors.primaryColor});
@@ -31,8 +26,11 @@ class FeaturedCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(18)),
       child: Row(
         children: [
-          Image(
-            image: AssetImage(featuredItem.imagePath),
+          Image.network(
+            featuredItem.imagePath,
+            width: 70,
+            height: 70,
+            fit: BoxFit.contain,
           ),
           const SizedBox(
             width: 15,

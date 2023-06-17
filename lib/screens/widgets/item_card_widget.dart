@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:partner_mobile/models/product.dart';
 import 'package:partner_mobile/models/product_item.dart';
 import 'package:partner_mobile/styles/app_colors.dart';
 
 class ItemCardWidget extends StatelessWidget {
-  const ItemCardWidget({Key? key, required this.item, this.heroSuffix})
+  const ItemCardWidget({Key? key, required this.item})
       : super(key: key);
-  final ProductItem item;
-  final String? heroSuffix;
+  final Product item;
 
-  final double width = 174;
-  final double height = 250;
+  final double width = 200;
+  final double height = 400;
   final Color borderColor = const Color(0xffE2E2E2);
   final double borderRadius = 18;
 
@@ -36,28 +36,17 @@ class ItemCardWidget extends StatelessWidget {
           children: [
             Expanded(
               child: Center(
-                child: Hero(
-                  tag: "GroceryItem:${item.name}-${heroSuffix ?? ""}",
-                  child: imageWidget(),
-                ),
+                child: imageWidget(),
               ),
             ),
             const SizedBox(
               height: 20,
             ),
             Text(
-              item.name,
+              item.productName!,
               style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              item.description,
-              style: const TextStyle(
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF7C7C7C),
               ),
             ),
             const SizedBox(
@@ -66,14 +55,19 @@ class ItemCardWidget extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  "\$${item.price.toStringAsFixed(2)}",
+                  "${item.price?.toStringAsFixed(0)} VNĐ",
                   style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const Spacer(),
-                addWidget()
+                GestureDetector(
+                  onTap: () {
+                    print("Add to cart");
+                  },
+                  child: addWidget(),
+                ),
               ],
             )
           ],
@@ -83,7 +77,12 @@ class ItemCardWidget extends StatelessWidget {
   }
 
   Widget imageWidget() {
-    return Image.asset(item.imagePath);
+    return Image.network(
+      item.picture!,
+      width: 100,
+      height: 200,
+      fit: BoxFit.cover,
+    );
   }
 
   Widget addWidget() {

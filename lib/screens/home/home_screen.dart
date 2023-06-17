@@ -1,11 +1,19 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:partner_mobile/models/product_item.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:partner_mobile/models/category.dart';
+import 'package:partner_mobile/models/product.dart';
 import 'package:partner_mobile/models/title_enum.dart';
 import 'package:partner_mobile/screens/home/home_banner.dart';
+import 'package:partner_mobile/screens/products/product_detail_screen.dart';
 import 'package:partner_mobile/screens/widgets/feature_card_widget.dart';
 import 'package:partner_mobile/screens/widgets/item_card_widget.dart';
 import 'package:partner_mobile/screens/widgets/search_bar_widget.dart';
+import 'package:partner_mobile/services/category_service.dart';
+import 'package:partner_mobile/services/product_service.dart';
 import 'package:partner_mobile/styles/app_colors.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,6 +23,25 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  List<Category> categories = [];
+  List<Product> latestProducts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    CategoryService.getCategories().then((value) {
+      setState(() {
+        categories = value;
+      });
+    });
+    ProductService.getLatestProducts().then((value) {
+      setState(() {
+        latestProducts = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -34,50 +61,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(
                   height: 25,
                 ),
-                padded(subTitle("Exclusive Order", TitleEnum.exclusiveOrder)),
-                getHorizontalItemSlider(exclusiveOffers),
-                const SizedBox(
-                  height: 15,
-                ),
                 padded(subTitle("Best Selling", TitleEnum.bestSelling)),
-                getHorizontalItemSlider(bestSelling),
+                getHorizontalItemSlider(latestProducts),
                 const SizedBox(
                   height: 15,
                 ),
-                padded(subTitle("Others", TitleEnum.others)),
+                padded(subTitle("Latest Product", TitleEnum.exclusiveOrder)),
+                getHorizontalItemSlider(latestProducts),
                 const SizedBox(
                   height: 15,
                 ),
-                SizedBox(
-                  height: 105,
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      FeaturedCard(
-                        featuredItems[0],
-                        color: const Color(0xffF8A44C),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      FeaturedCard(
-                        featuredItems[1],
-                        color: AppColors.primaryColor,
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                    ],
-                  ),
-                ),
+                padded(subTitle("Categories", TitleEnum.others)),
                 const SizedBox(
                   height: 15,
                 ),
-                getHorizontalItemSlider(others),
+                getHorizontalCategory(categories),
+                const SizedBox(
+                  height: 15,
+                ),
+                getHorizontalItemSlider(latestProducts),
                 const SizedBox(
                   height: 15,
                 ),
@@ -96,6 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // get title
   Widget subTitle(String text, TitleEnum titleEnum) {
     return Row(
       children: [
@@ -127,7 +130,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget getHorizontalItemSlider(List<ProductItem> items) {
+  // get all products
+  Widget getHorizontalItemSlider(List<Product> items) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       height: 250,
@@ -137,10 +141,17 @@ class _HomeScreenState extends State<HomeScreen> {
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                  context,
+                  PageTransition(
+                    type: PageTransitionType.bottomToTop,
+                    child: ProductDetailScreen(productId: items[index].productId!)
+                  ),
+              );
+            },
             child: ItemCardWidget(
               item: items[index],
-              heroSuffix: "home_screen",
             ),
           );
         },
@@ -149,6 +160,34 @@ class _HomeScreenState extends State<HomeScreen> {
             width: 20,
           );
         },
+      ),
+    );
+  }
+
+  // get all categories
+  Widget getHorizontalCategory(List<Category> categories) {
+    return SizedBox(
+      height: 105,
+      child: ListView.builder(
+          padding: EdgeInsets.zero,
+          scrollDirection: Axis.horizontal,
+          itemCount: categories.length,
+          itemBuilder: (context, index){
+            return Row(
+              children: [
+                const SizedBox(
+                  width: 10,
+                ),
+                FeaturedCard(
+                  FeaturedItem(categories[index].categoryName!, categories[index].categoryPicture!),
+                  color: Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+              ],
+            );
+          }
       ),
     );
   }

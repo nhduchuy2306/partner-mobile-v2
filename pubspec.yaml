@@ -15,7 +15,7 @@ dependencies:
   hive_flutter: ^1.1.0
   google_sign_in: ^6.1.2
   firebase_auth: ^4.6.1
-  http: ^0.13.6
+  http: ^1.0.0
 
 dev_dependencies:
   flutter_test:

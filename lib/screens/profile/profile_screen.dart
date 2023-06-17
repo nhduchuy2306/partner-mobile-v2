@@ -43,10 +43,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(
               height: 20,
             ),
-            logoutButton(),
+            logoutButton(userInfo),
             const SizedBox(
               height: 20,
-            )
+            ),
           ],
         ),
       ),
@@ -71,7 +71,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Widget logoutButton() {
+  Widget logoutButton(userInfo) {
+    if (userInfo == null) {
+      return Container();
+    }
     return Container(
       width: double.maxFinite,
       margin: const EdgeInsets.symmetric(horizontal: 25),
