@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:partner_mobile/screens/dashboard/dashboard_screen.dart';
 import 'package:partner_mobile/screens/welcome_screen.dart';
 
 import '../styles/app_colors.dart';
@@ -20,11 +22,21 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void onTimerFinished() {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (BuildContext context) {
-        return const WelcomeScreen();
-      },
-    ));
+    var myBox = Hive.box('localStorage');
+
+    if (myBox.get('isFirstTime') == true) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (BuildContext context) {
+          return const DashBoardScreen();
+        },
+      ));
+    } else {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (BuildContext context) {
+          return const WelcomeScreen();
+        },
+      ));
+    }
   }
 
   @override

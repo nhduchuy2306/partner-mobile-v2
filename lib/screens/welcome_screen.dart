@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../styles/app_colors.dart';
@@ -12,6 +13,9 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+
+  final _myBox = Hive.box('localStorage');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,6 +101,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       ),
       child: MaterialButton(
         onPressed: () {
+          if(_myBox.get('isFirstTime') == null) {
+            _myBox.put('isFirstTime', true);
+          }
           onGetStartedClicked(context);
         },
         child: const Text(

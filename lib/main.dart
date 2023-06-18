@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:partner_mobile/screens/splash_screen.dart';
-// ignore: depend_on_referenced_packages
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
