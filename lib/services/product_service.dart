@@ -26,4 +26,16 @@ class ProductService {
     }
     return product;
   }
+
+  static Future<List<Product>> getBestSellingProducts() async {
+    var response = await http.get(Uri.parse("$baseUrl/products/best-selling"));
+    List<Product> products = [];
+    if (response.statusCode == 200) {
+      var productsJson = json.decode(utf8.decode(response.bodyBytes));
+      for (var productJson in productsJson) {
+        products.add(Product.fromJson(productJson));
+      }
+    }
+    return products;
+  }
 }
