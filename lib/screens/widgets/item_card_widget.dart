@@ -4,12 +4,12 @@ import 'package:partner_mobile/models/product_item.dart';
 import 'package:partner_mobile/styles/app_colors.dart';
 
 class ItemCardWidget extends StatelessWidget {
-  const ItemCardWidget({Key? key, required this.item})
+  const ItemCardWidget({Key? key, required this.item, this.width = 200, this.height = 500})
       : super(key: key);
   final Product item;
 
-  final double width = 200;
-  final double height = 500;
+  final double? width;
+  final double? height;
   final Color borderColor = const Color(0xffE2E2E2);
   final double borderRadius = 18;
 
@@ -28,8 +28,8 @@ class ItemCardWidget extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 15,
+          horizontal: 10,
+          vertical: 10,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
