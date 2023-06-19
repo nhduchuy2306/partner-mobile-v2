@@ -1,29 +1,33 @@
 class CartItem {
-  final String productId;
-  final String productName;
-  final int quantity;
-  final double price;
+  int? productId;
+  String? productName;
+  String? productImage;
+  int? quantity;
+  double? price;
 
   CartItem({
-    required this.productId,
-    required this.productName,
-    required this.quantity,
-    required this.price,
+    this.productId,
+    this.productName,
+    this.productImage,
+    this.quantity,
+    this.price,
   });
 
-  factory CartItem.fromJson(Map<String, dynamic> json) {
-    return CartItem(
-      productId: json['productId'],
-      productName: json['productName'],
-      quantity: json['quantity'],
-      price: json['price'],
-    );
+  CartItem.fromJson(Map<String, dynamic> json) {
+    productId = json['productId'];
+    productName = json['productName'];
+    productImage = json['productImage'];
+    quantity = json['quantity'];
+    price = json['price'];
   }
 
-  Map<String, dynamic> toJson() => {
-        'productId': productId,
-        'productName': productName,
-        'quantity': quantity,
-        'price': price,
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['productId'] = productId;
+    data['productName'] = productName;
+    data['productImage'] = productImage;
+    data['quantity'] = quantity;
+    data['price'] = price;
+    return data;
+  }
 }

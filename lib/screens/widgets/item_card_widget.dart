@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:partner_mobile/models/product.dart';
 import 'package:partner_mobile/models/product_item.dart';
+import 'package:partner_mobile/services/cart_service.dart';
 import 'package:partner_mobile/styles/app_colors.dart';
 
 class ItemCardWidget extends StatelessWidget {
@@ -64,7 +65,15 @@ class ItemCardWidget extends StatelessWidget {
                 const Spacer(),
                 GestureDetector(
                   onTap: () {
-                    print("Add to cart");
+                    Future<void> addToCartAction = CartService.addToCart(item);
+                    addToCartAction.then((value) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Add to cart successfully!'),
+                          duration: Duration(seconds: 1),
+                        ),
+                      );
+                    });
                   },
                   child: addWidget(),
                 ),
