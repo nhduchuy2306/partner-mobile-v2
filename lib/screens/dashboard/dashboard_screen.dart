@@ -57,18 +57,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     );
   }
 
-  // // Screens
-  // List<Widget> screens = [
-  //   HomeScreen(
-  //     // go to shop screen
-  //     goToShopScreen: goToShopScreen(0),
-  //   ),
-  //   const ShopScreen(),
-  //   const CartScreen(),
-  //   const NotificationScreen(),
-  //   const ProfileScreen(),
-  // ];
-
   // Navigation Items
   List<BottomNavigationBarItem> navigatorItems = [
     const BottomNavigationBarItem(

@@ -4,7 +4,7 @@ class AssetHelper {
 
   // demo products
   static const String imageProduct1 =
-      'assets/iamges/product_images/product_1.png';
+      'assets/images/product_images/product_1.png';
   static const String imageProduct2 =
       'assets/images/product_images/product_2.png';
   static const String imageProduct3 =

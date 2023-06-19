@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:partner_mobile/common_widgets/app_button.dart';
+import 'package:partner_mobile/models/customer_membership.dart';
 import 'package:partner_mobile/provider/google_signin_provider.dart';
 import 'package:partner_mobile/screens/login_screen.dart';
 import 'package:partner_mobile/styles/app_colors.dart';
+
+import '../../services/customer_membership_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -18,13 +21,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late User? user = FirebaseAuth.instance.currentUser;
   late UserInfo? userInfo = user?.providerData[0];
 
+  late Future<CustomerMemberShip> customerMemberShips;
+
   @override
   void initState() {
     super.initState();
     setState(() {
       user = FirebaseAuth.instance.currentUser;
       userInfo = user?.providerData[0];
+      customerMemberShips =
+          CustomerMemberShipService.getCustomerMemberShipById("1");
     });
+    customerMemberShips.then(
+        (value) => print("customerMemberShips: ${value.toJson().toString()}"));
   }
 
   @override
@@ -173,55 +182,122 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(
             height: 20,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.only(left: 30),
-                child: const Row(
-                  children: [
-                    Icon(
-                      FontAwesomeIcons.rankingStar,
-                      color: Colors.black,
-                      size: 15,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "Đồng",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
+          FutureBuilder<CustomerMemberShip>(
+              future: customerMemberShips,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(left: 30),
+                            width: MediaQuery.of(context).size.width / 3,
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  FontAwesomeIcons.rankingStar,
+                                  color: Colors.black,
+                                  size: 15,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "${snapshot.data?.membership?.level}",
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.only(left: 70),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  FontAwesomeIcons.wallet,
+                                  color: Colors.black,
+                                  size: 15,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "${snapshot.data?.walletList?[0].balance?.toStringAsFixed(0)}",
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(left: 90),
-                child: const Row(
-                  children: [
-                    Icon(
-                      FontAwesomeIcons.wallet,
-                      color: Colors.black,
-                      size: 15,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "3000 points",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
+                      const SizedBox(
+                        height: 20,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          )
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(left: 30),
+                            width: MediaQuery.of(context).size.width / 3,
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  FontAwesomeIcons.medal,
+                                  color: Colors.black,
+                                  size: 15,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "${snapshot.data?.membership?.totalReceipt?.toStringAsFixed(0)}/"
+                                  "${snapshot.data?.nextLevel?.condition?.toStringAsFixed(0)}",
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.only(left: 70),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  FontAwesomeIcons.coins,
+                                  color: Colors.black,
+                                  size: 15,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "${snapshot.data?.membership?.totalExpenditure?.toStringAsFixed(0)}",
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                } else {
+                  return const Center(child: CircularProgressIndicator());
+                }
+              }),
         ],
       );
     } else {
