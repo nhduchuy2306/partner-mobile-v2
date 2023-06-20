@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:page_transition/page_transition.dart';
 import 'package:partner_mobile/models/brand.dart';
+import 'package:partner_mobile/models/category.dart';
 import 'package:partner_mobile/models/product.dart';
 import 'package:partner_mobile/models/product_description.dart';
 import 'package:partner_mobile/models/product_picture.dart';
-import 'package:partner_mobile/models/category.dart';
 import 'package:partner_mobile/screens/products/product_detail_screen.dart';
 import 'package:partner_mobile/screens/shop/filter_screen.dart';
 import 'package:partner_mobile/screens/widgets/item_card_widget.dart';
@@ -30,6 +30,15 @@ class _ShopScreenState extends State<ShopScreen> {
   bool _hasNextPage = true;
   bool _isLoadMoreRunning = false;
   final List<Product> _products = [];
+
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _firstLoad();
+    _scrollController = ScrollController()..addListener(_loadMore);
+  }
 
   void _loadMore() async {
     if (_hasNextPage == true &&
@@ -86,15 +95,6 @@ class _ShopScreenState extends State<ShopScreen> {
     setState(() {
       _isFirstLoadRunning = false;
     });
-  }
-
-  late ScrollController _scrollController;
-
-  @override
-  void initState() {
-    super.initState();
-    _firstLoad();
-    _scrollController = ScrollController()..addListener(_loadMore);
   }
 
   @override

@@ -1,9 +1,11 @@
 import 'dart:convert';
-import '../models/category.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:partner_mobile/models/category.dart';
 
 class CategoryService {
-  static const String baseUrl = "https://my-happygear.azurewebsites.net/happygear/api";
+  static const String baseUrl =
+      "https://my-happygear.azurewebsites.net/happygear/api";
 
   static Future<List<Category>> getCategories() async {
     var response = await http.get(Uri.parse('$baseUrl/categories'));

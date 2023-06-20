@@ -1,6 +1,7 @@
 import 'dart:convert';
-import 'package:partner_mobile/models/product.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:partner_mobile/models/product.dart';
 
 class ProductService {
   static const baseUrl = "https://my-happygear.azurewebsites.net/happygear/api";

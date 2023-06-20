@@ -170,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: ProductDetailScreen(
                     product: items[index]!,
                     productDescription:
-                      getProductDescriptionById(items[index]!.productId!),
+                        getProductDescriptionById(items[index]!.productId!),
                     productPictures:
                         getProductPicture(items[index]!.productId!),
                   ),

@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:partner_mobile/models/cart_item.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:partner_mobile/models/product.dart';
+import 'package:partner_mobile/models/product_description.dart';
+import 'package:partner_mobile/models/product_picture.dart';
 import 'package:partner_mobile/provider/cart_provider.dart';
 import 'package:partner_mobile/screens/cart/checkout_bottom_sheet.dart';
+import 'package:partner_mobile/screens/products/product_detail_screen.dart';
+import 'package:partner_mobile/screens/widgets/shopping_cart_item.dart';
+import 'package:partner_mobile/services/product_description_service.dart';
+import 'package:partner_mobile/services/product_picture_service.dart';
 import 'package:provider/provider.dart';
 
 class CartScreen extends StatefulWidget {
@@ -12,8 +19,6 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  late Future<List<CartItem>> cartItems;
-
   @override
   void initState() {
     super.initState();
@@ -21,6 +26,18 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Future<List<ProductPicture>> getProductPicture(int id) async {
+      var productPicture =
+          await ProductPictureService.getAllPictureForProductById(id);
+      return productPicture;
+    }
+
+    Future<ProductDescription> getProductDescriptionById(int id) async {
+      var productDescription =
+          await ProductDescriptionService.getDescriptionByProductId(id);
+      return productDescription;
+    }
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -30,7 +47,7 @@ class _CartScreenState extends State<CartScreen> {
             "Cart",
             style: TextStyle(
               color: Colors.black,
-              fontSize: 20,
+              fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -48,97 +65,31 @@ class _CartScreenState extends State<CartScreen> {
                     itemCount: cartProvider.cartItems.length,
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
-                      return Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 25, vertical: 10),
-                        child: Row(
-                          children: [
-                            Container(
-                              height: 80,
-                              width: 80,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                      cartProvider.cartItems[index].productImage! ?? ""),
-                                  fit: BoxFit.cover,
-                                ),
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              type: PageTransitionType.bottomToTop,
+                              duration: const Duration(milliseconds: 300),
+                              child: ProductDetailScreen(
+                                product:
+                                    cartProvider.cartItems[index].product ??
+                                        Product(),
+                                productDescription: getProductDescriptionById(
+                                    cartProvider.cartItems[index].product
+                                            ?.productId ??
+                                        1),
+                                productPictures: getProductPicture(cartProvider
+                                        .cartItems[index].product?.productId ??
+                                    1),
                               ),
                             ),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    cartProvider.cartItems[index].productName! ?? "",
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    "${cartProvider.cartItems[index].price!.toStringAsFixed(0)} VND",
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {},
-                                        child: Container(
-                                          padding: const EdgeInsets.all(2),
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xff489E67),
-                                            borderRadius: BorderRadius.circular(4),
-                                          ),
-                                          child: const Icon(
-                                            Icons.remove,
-                                            color: Colors.white,
-                                            size: 15,
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 2),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: Colors.grey.shade300),
-                                        ),
-                                        child: Text(
-                                          "${cartProvider.cartItems[index].quantity}",
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {},
-                                        child: Container(
-                                          padding: const EdgeInsets.all(2),
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xff489E67),
-                                            borderRadius: BorderRadius.circular(4),
-                                          ),
-                                          child: const Icon(
-                                            Icons.add,
-                                            color: Colors.white,
-                                            size: 15,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
+                          );
+                        },
+                        child: ShoppingCartItem(
+                          product: cartProvider.cartItems[index].product,
+                          quantity: cartProvider.cartItems[index].quantity,
                         ),
                       );
                     },

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:partner_mobile/provider/google_signin_provider.dart';
 import 'package:partner_mobile/screens/dashboard/dashboard_screen.dart';
-
-import '../styles/app_colors.dart';
+import 'package:partner_mobile/styles/app_colors.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

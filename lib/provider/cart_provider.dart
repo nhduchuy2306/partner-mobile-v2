@@ -28,47 +28,58 @@ class CartProvider with ChangeNotifier {
     await _prefs.setString('cartItems', cartData);
   }
 
-  void addToCart(Product product) {
-    if (_cartItems.any((item) => item.productId == product.productId)) {
-      final cartItem = _cartItems.firstWhere((item) => item.productId == product.productId);
-      cartItem.quantity = cartItem.quantity! + 1;
+  void addToCart(Product productModel, int quantity) {
+    if (_cartItems
+        .any((item) => item.product?.productId == productModel.productId)) {
+      final cartItem = _cartItems.firstWhere(
+          (item) => item.product?.productId == productModel.productId);
+      if (quantity == 1) {
+        cartItem.quantity = cartItem.quantity! + 1;
+      } else {
+        cartItem.quantity = cartItem.quantity! + quantity;
+      }
       _saveToPrefs();
       notifyListeners();
-
-      print('Cart Item: ${cartItem.quantity}');
-      print('Cart Name: ${cartItem.productName}');
-      print('Cart length: ${_cartItems.length}');
       return;
-    }
-    else{
+    } else {
       final cartItem = CartItem(
-        productId: product.productId,
-        productName: product.productName,
-        productImage: product.picture,
-        price: product.price,
-        quantity: 1,
+        product: productModel,
+        quantity: quantity,
       );
       _cartItems.add(cartItem);
       _saveToPrefs();
       notifyListeners();
 
-      print('Cart Item: ${cartItem.quantity}');
-      print('Cart Name: ${cartItem.productName}');
       return;
     }
   }
 
   void removeFromCart(int productId) {
-    _cartItems.removeWhere((item) => item.productId == productId);
-    if(_cartItems.isEmpty){
+    _cartItems.removeWhere((item) => item.product?.productId == productId);
+    if (_cartItems.isEmpty) {
       _prefs.remove('cartItems');
       _saveToPrefs();
-    }
-    else{
+    } else {
       _saveToPrefs();
     }
     notifyListeners();
   }
 
   int get numItemsInCart => _cartItems.length;
+
+  void increaseCartItemQuantity(int productId) {
+    final cartItem =
+        _cartItems.firstWhere((item) => item.product?.productId == productId);
+    cartItem.quantity = cartItem.quantity! + 1;
+    _saveToPrefs();
+    notifyListeners();
+  }
+
+  void decreaseCartItemQuantity(int productId) {
+    final cartItem =
+        _cartItems.firstWhere((item) => item.product?.productId == productId);
+    cartItem.quantity = cartItem.quantity! - 1;
+    _saveToPrefs();
+    notifyListeners();
+  }
 }

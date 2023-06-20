@@ -11,14 +11,14 @@ class Product {
 
   Product(
       {this.productId,
-        this.productName,
-        this.price,
-        this.quantity,
-        this.insuranceInfo,
-        this.picture,
-        this.status,
-        this.categoryId,
-        this.brandId});
+      this.productName,
+      this.price,
+      this.quantity,
+      this.insuranceInfo,
+      this.picture,
+      this.status,
+      this.categoryId,
+      this.brandId});
 
   Product.fromJson(Map<String, dynamic> json) {
     productId = json['productId'];

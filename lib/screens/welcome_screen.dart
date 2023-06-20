@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:partner_mobile/styles/app_colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../styles/app_colors.dart';
 import 'dashboard/dashboard_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -13,8 +13,17 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+  late SharedPreferences prefs;
 
-  final _myBox = Hive.box('localStorage');
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  init() async {
+    prefs = await SharedPreferences.getInstance();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,9 +110,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       ),
       child: MaterialButton(
         onPressed: () {
-          if(_myBox.get('isFirstTime') == null) {
-            _myBox.put('isFirstTime', true);
+          var isFirsTime = prefs.getBool('isFirstTime');
+          if (isFirsTime == null) {
+            prefs.setBool('isFirstTime', true);
           }
+
           onGetStartedClicked(context);
         },
         child: const Text(

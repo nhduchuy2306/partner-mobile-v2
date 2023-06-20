@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:partner_mobile/models/product.dart';
 import 'package:partner_mobile/models/product_description.dart';
 import 'package:partner_mobile/models/product_picture.dart';
+import 'package:partner_mobile/provider/cart_provider.dart';
 import 'package:partner_mobile/screens/widgets/carousel_loading.dart';
 import 'package:partner_mobile/screens/widgets/item_counter_widget.dart';
+import 'package:provider/provider.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   ProductDetailScreen(
@@ -96,22 +98,26 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        margin: const EdgeInsets.all(15),
-        child: ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue,
-            minimumSize: const Size(double.maxFinite, 50),
-            padding: const EdgeInsets.symmetric(vertical: 15),
-            textStyle: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+      bottomNavigationBar: Consumer<CartProvider>(builder: (context, cartProvider,child){
+        return Container(
+          margin: const EdgeInsets.all(15),
+          child: ElevatedButton(
+            onPressed: () {
+              cartProvider.addToCart(widget.product,_amount);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              minimumSize: const Size(double.maxFinite, 50),
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              textStyle: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            child: const Text("Add to Cart"),
           ),
-          child: const Text("Add to Cart"),
-        ),
-      ),
+        );
+      }),
     );
   }
 

@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:partner_mobile/screens/dashboard/dashboard_screen.dart';
+import 'package:partner_mobile/styles/app_colors.dart';
 
-import '../../styles/app_colors.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:partner_mobile/screens/dashboard/dashboard_screen.dart';
 import 'package:partner_mobile/screens/welcome_screen.dart';
-
-import '../styles/app_colors.dart';
+import 'package:partner_mobile/styles/app_colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,18 +12,24 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  late SharedPreferences prefs;
+
   @override
   void initState() {
     super.initState();
-
+    init();
     const delay = Duration(seconds: 3);
     Future.delayed(delay, () => onTimerFinished());
   }
 
-  void onTimerFinished() {
-    var myBox = Hive.box('localStorage');
+  init() async {
+    prefs = await SharedPreferences.getInstance();
+  }
 
-    if (myBox.get('isFirstTime') == true) {
+  void onTimerFinished() {
+    var isFirstTime = prefs.getBool('isFirstTime');
+
+    if (isFirstTime == true) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (BuildContext context) {
           return const DashBoardScreen();

@@ -1,10 +1,11 @@
 import 'dart:convert';
 
-import 'package:partner_mobile/models/brand.dart';
 import 'package:http/http.dart' as http;
+import 'package:partner_mobile/models/brand.dart';
 
 class BrandService {
-  static const String baseUrl = "https://my-happygear.azurewebsites.net/happygear/api";
+  static const String baseUrl =
+      "https://my-happygear.azurewebsites.net/happygear/api";
 
   static Future<List<Brand>> getBrands() async {
     var response = await http.get(Uri.parse('$baseUrl/brands'));

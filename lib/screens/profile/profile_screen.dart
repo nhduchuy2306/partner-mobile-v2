@@ -32,8 +32,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       customerMemberShips =
           CustomerMemberShipService.getCustomerMemberShipById("1");
     });
-    customerMemberShips.then(
-        (value) => print("customerMemberShips: ${value.toJson().toString()}"));
   }
 
   @override

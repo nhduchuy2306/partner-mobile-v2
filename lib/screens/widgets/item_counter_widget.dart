@@ -19,8 +19,8 @@ class _ItemCounterWidgetState extends State<ItemCounterWidget> {
         iconWidget(
           Icons.remove,
           iconColor: Colors.black,
-          onPressed: (){
-            if(amount > 1) decrementAmount();
+          onPressed: () {
+            if (amount > 1) decrementAmount();
           },
         ),
         const SizedBox(width: 18),

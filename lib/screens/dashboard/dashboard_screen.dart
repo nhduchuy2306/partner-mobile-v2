@@ -54,14 +54,28 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         label: "Shop",
       ),
       BottomNavigationBarItem(
-        icon: Consumer<CartProvider>(builder: (context, cartProvider, child){
-          return Badge(
-            label: Text(
-              cartProvider.cartItems.length.toString(),
-              style: const TextStyle(color: Colors.white),
-            ),
-            child: const Icon(Icons.shopping_cart),
-          );
+        icon: Consumer<CartProvider>(builder: (context, cartProvider, child) {
+          if (cartProvider.cartItems.isEmpty) {
+            return const Icon(Icons.shopping_cart);
+          } else if (cartProvider.cartItems.length > 9) {
+            return const Badge(
+              label: Text(
+                "9+",
+                style: TextStyle(color: Colors.white),
+              ),
+              child: Icon(Icons.shopping_cart),
+            );
+          } else if (cartProvider.cartItems.isNotEmpty) {
+            return Badge(
+              label: Text(
+                cartProvider.cartItems.length.toString(),
+                style: const TextStyle(color: Colors.white),
+              ),
+              child: const Icon(Icons.shopping_cart),
+            );
+          } else {
+            return const Icon(Icons.shopping_cart);
+          }
         }),
         label: "Cart",
       ),

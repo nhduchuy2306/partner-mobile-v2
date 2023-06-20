@@ -57,7 +57,7 @@ class ItemCardWidget extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  "${item.price?.toStringAsFixed(0)} VNĐ",
+                  "${item.price?.toStringAsFixed(0)} VND",
                   style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
@@ -68,7 +68,7 @@ class ItemCardWidget extends StatelessWidget {
                   builder: (context, cartProvider, child) {
                     return GestureDetector(
                       onTap: () {
-                        cartProvider.addToCart(item);
+                        cartProvider.addToCart(item, 1);
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('Add to cart successfully!'),
@@ -106,8 +106,8 @@ class ItemCardWidget extends StatelessWidget {
 
   Widget addWidget() {
     return Container(
-      height: 45,
-      width: 45,
+      height: 30,
+      width: 30,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(17),
           color: AppColors.primaryColor),
