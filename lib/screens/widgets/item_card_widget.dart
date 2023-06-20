@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:partner_mobile/models/product.dart';
-import 'package:partner_mobile/models/product_item.dart';
-import 'package:partner_mobile/services/cart_service.dart';
+import 'package:partner_mobile/provider/cart_provider.dart';
 import 'package:partner_mobile/styles/app_colors.dart';
+import 'package:provider/provider.dart';
 
 class ItemCardWidget extends StatelessWidget {
-  const ItemCardWidget({Key? key, required this.item, this.width = 200, this.height = 500})
+  const ItemCardWidget(
+      {Key? key, required this.item, this.width = 200, this.height = 500})
       : super(key: key);
   final Product item;
 
@@ -58,24 +59,33 @@ class ItemCardWidget extends StatelessWidget {
                 Text(
                   "${item.price?.toStringAsFixed(0)} VNĐ",
                   style: const TextStyle(
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const Spacer(),
-                GestureDetector(
-                  onTap: () {
-                    Future<void> addToCartAction = CartService.addToCart(item);
-                    addToCartAction.then((value) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Add to cart successfully!'),
-                          duration: Duration(seconds: 1),
+                Consumer<CartProvider>(
+                  builder: (context, cartProvider, child) {
+                    return GestureDetector(
+                      onTap: () {
+                        cartProvider.addToCart(item);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Add to cart successfully!'),
+                            duration: Duration(seconds: 1),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryColor,
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                      );
-                    });
+                        child: addWidget(),
+                      ),
+                    );
                   },
-                  child: addWidget(),
                 ),
               ],
             )
