@@ -82,4 +82,12 @@ class CartProvider with ChangeNotifier {
     _saveToPrefs();
     notifyListeners();
   }
+
+  double get totalAmount {
+    double total = 0;
+    for (var item in _cartItems) {
+      total += item.product!.price! * item.quantity!;
+    }
+    return total;
+  }
 }

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CheckoutBottomSheet extends StatefulWidget {
+  const CheckoutBottomSheet({super.key, required this.totalAmount});
+
+  final double totalAmount;
+
   @override
   _CheckoutBottomSheetState createState() => _CheckoutBottomSheetState();
 }
@@ -20,47 +24,46 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
         children: <Widget>[
           Row(
             children: [
-              Text(
+              const Text(
                 "Checkout",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
                   },
-                  child: Icon(
+                  child: const Icon(
                     Icons.close,
                     size: 25,
                   ))
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 45,
           ),
           getDivider(),
-          checkoutRow("Delivery", trailingText: "Select Method"),
+          checkoutRow("Delivery",
+              trailingText: "Select Method", showArrow: true),
           getDivider(),
-          checkoutRow(
-            "Payment",
-            trailingWidget: Icon(
-              Icons.payment,
-            ),
-          ),
+          checkoutRow("Payment",
+              trailingWidget: const Icon(
+                Icons.payment,
+              ),
+              showArrow: true),
           getDivider(),
-          checkoutRow("Promo Code", trailingText: "Pick Discount"),
+          checkoutRow("Total Cost",
+              trailingText: "${widget.totalAmount.toStringAsFixed(0)} VND"),
           getDivider(),
-          checkoutRow("Total Cost", trailingText: "\$13.97"),
-          getDivider(),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
           termsAndConditionsAgreement(context),
           Container(
-            margin: EdgeInsets.only(
+            margin: const EdgeInsets.only(
               top: 25,
             ),
             child: GestureDetector(
@@ -95,7 +98,7 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
   }
 
   Widget getDivider() {
-    return Divider(
+    return const Divider(
       thickness: 1,
       color: Color(0xFFE2E2E2),
     );
@@ -106,16 +109,16 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
       text: TextSpan(
           text: 'By placing an order you agree to our',
           style: TextStyle(
-            color: Color(0xFF7C7C7C),
+            color: const Color(0xFF7C7C7C),
             fontSize: 14,
             fontFamily: Theme.of(context).textTheme.bodyText1?.fontFamily,
             fontWeight: FontWeight.w600,
           ),
-          children: [
+          children: const [
             TextSpan(
               text: " Terms",
               style:
-              TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             ),
             TextSpan(text: " And"),
             TextSpan(
@@ -130,38 +133,40 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
   }
 
   Widget checkoutRow(String label,
-      {String? trailingText, Widget? trailingWidget}) {
+      {String? trailingText, Widget? trailingWidget, bool? showArrow}) {
     return Container(
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
         vertical: 15,
       ),
       child: Row(
         children: [
           Text(
             label,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
           ),
-          Spacer(),
+          const Spacer(),
           trailingText == null
               ? (trailingWidget ?? Container())
               : Text(
-            trailingText,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF7C7C7C),
-            ),
-          ),
-          SizedBox(
+                  trailingText,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF7C7C7C),
+                  ),
+                ),
+          const SizedBox(
             width: 20,
           ),
-          Icon(
-            Icons.arrow_forward_ios,
-            size: 20,
-          )
+          showArrow == null || showArrow == false
+              ? Container()
+              : const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 20,
+                )
         ],
       ),
     );

@@ -56,11 +56,11 @@ class _CartScreenState extends State<CartScreen> {
         body: SingleChildScrollView(
           controller: ScrollController(),
           physics: const BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              Consumer<CartProvider>(
-                builder: (context, cartProvider, child) {
-                  return ListView.builder(
+          child: Consumer<CartProvider>(
+            builder: (context, cartProvider, child) {
+              return Column(
+                children: [
+                  ListView.builder(
                     shrinkWrap: true,
                     itemCount: cartProvider.cartItems.length,
                     physics: const NeverScrollableScrollPhysics(),
@@ -93,26 +93,26 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                       );
                     },
-                  );
-                },
-              ),
-              const Divider(
-                thickness: 1,
-              ),
-              getCheckoutButton(context)
-            ],
+                  ),
+                  const Divider(
+                    thickness: 1,
+                  ),
+                  getCheckoutButton(context, cartProvider.totalAmount)
+                ],
+              );
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget getCheckoutButton(BuildContext context) {
+  Widget getCheckoutButton(BuildContext context, double totalAmount) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
       child: GestureDetector(
         onTap: () {
-          showBottomSheet(context);
+          showBottomSheet(context, totalAmount);
         },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 15),
@@ -134,27 +134,13 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget getButtonPriceWidget() {
-    return Container(
-      padding: const EdgeInsets.all(2),
-      decoration: BoxDecoration(
-        color: const Color(0xff489E67),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: const Text(
-        "\$12.96",
-        style: TextStyle(fontWeight: FontWeight.w600),
-      ),
-    );
-  }
-
-  void showBottomSheet(context) {
+  void showBottomSheet(context, double totalAmount) {
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
         builder: (BuildContext bc) {
-          return CheckoutBottomSheet();
+          return CheckoutBottomSheet(totalAmount: totalAmount);
         });
   }
 }

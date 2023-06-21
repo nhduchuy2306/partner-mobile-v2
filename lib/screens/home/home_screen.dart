@@ -30,7 +30,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Category> categories = [];
   List<Product> latestProducts = [];
-  List<Product> bestSelingProducts = [];
+  List<Product> bestSellingProducts = [];
 
   @override
   void initState() {
@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     ProductService.getBestSellingProducts().then((value) => {
           setState(() {
-            bestSelingProducts = value;
+            bestSellingProducts = value;
           })
         });
   }
@@ -71,11 +71,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(
                   height: 25,
                 ),
-                if (bestSelingProducts.isNotEmpty)
+                if (bestSellingProducts.isNotEmpty)
                   Column(
                     children: [
                       padded(subTitle("Best Selling", TitleEnum.bestSelling)),
-                      getHorizontalItemSlider(bestSelingProducts),
+                      getHorizontalItemSlider(bestSellingProducts),
                     ],
                   ),
                 const SizedBox(
@@ -94,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(
                   height: 15,
                 ),
-                getHorizontalItemSlider(bestSelingProducts),
+                getHorizontalItemSlider(bestSellingProducts),
                 const SizedBox(
                   height: 15,
                 ),
