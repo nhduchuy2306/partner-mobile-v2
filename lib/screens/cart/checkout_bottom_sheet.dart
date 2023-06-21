@@ -213,6 +213,10 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
   }
 
   Future<String> placeOrder(List<CartItem> carts) async {
+    if(userInfo == null) {
+      return "error";
+    }
+
     if (carts.isEmpty) {
       return "empty";
     }

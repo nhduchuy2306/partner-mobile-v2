@@ -54,14 +54,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   child: GestureDetector(
                     onTap: () async {
-                      showDialog(
-                        context: context,
-                        builder: (context) => const Center(
-                          child: CircularProgressIndicator(
-                            color: AppColors.primaryColor,
-                          ),
-                        ),
-                      );
+                      // showDialog(
+                      //   context: context,
+                      //   builder: (context) => const Center(
+                      //     child: CircularProgressIndicator(
+                      //       color: AppColors.primaryColor,
+                      //     ),
+                      //   ),
+                      // );
                       final GoogleSignInProvider googleSignInProvider =
                           GoogleSignInProvider();
                       GoogleSignInAccount user =
