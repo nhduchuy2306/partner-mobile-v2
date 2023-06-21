@@ -28,6 +28,12 @@ class CartProvider with ChangeNotifier {
     await _prefs.setString('cartItems', cartData);
   }
 
+  void clearCart() {
+    _cartItems.clear();
+    _prefs.remove('cartItems');
+    notifyListeners();
+  }
+
   void addToCart(Product productModel, int quantity) {
     if (_cartItems
         .any((item) => item.product?.productId == productModel.productId)) {

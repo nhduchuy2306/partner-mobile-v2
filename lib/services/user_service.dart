@@ -1,69 +1,46 @@
+import 'dart:convert';
+import 'dart:ffi';
+
+import 'package:partner_mobile/models/user.dart';
+import 'package:partner_mobile/models/user_info.dart';
 import 'package:http/http.dart' as http;
 
-class User {
-  int? id;
-  String? userName;
-  String? fullName;
-  String? code;
-  String? email;
-  String? image;
-  String? phone;
-  String? address;
-  bool? state;
-  bool? status;
+class UserService {
+  static const baseUrl = "https://my-happygear.azurewebsites.net/happygear/api";
 
-  User(
-      {this.id,
-      this.userName,
-      this.fullName,
-      this.code,
-      this.email,
-      this.image,
-      this.phone,
-      this.address,
-      this.state,
-      this.status});
+  static Future<User> register(UserInfo userInfo) async {
+    var response = await http.post(Uri.parse('$baseUrl/users/register'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode(userInfo.toJson()));
 
-  User.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    userName = json['userName'];
-    fullName = json['fullName'];
-    code = json['code'];
-    email = json['email'];
-    image = json['image'];
-    phone = json['phone'];
-    address = json['address'];
-    state = json['state'];
-    status = json['status'];
+    if (response.statusCode == 201) {
+      print('User registered successfully');
+      return User.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+    } else {
+      print('Failed to register user');
+      throw Exception('Failed to register user');
+    }
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['userName'] = this.userName;
-    data['fullName'] = this.fullName;
-    data['code'] = this.code;
-    data['email'] = this.email;
-    data['image'] = this.image;
-    data['phone'] = this.phone;
-    data['address'] = this.address;
-    data['state'] = this.state;
-    data['status'] = this.status;
-    return data;
-  }
-}
+  static Future<User?> getUserByUsername(String username) async {
+    var response = await http.get(Uri.parse('$baseUrl/users/$username'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
 
-Future<dynamic> fetchUser() async {
-  final response = await http
-      .get(Uri.parse('https://swd-back-end.azurewebsites.net/api/partners'));
-
-  if (response.statusCode == 200) {
-    // If the server did return a 200 OK response,
-    // then parse the JSON.
-    return response.body;
-  } else {
-    // If the server did not return a 200 OK response,
-    // then throw an exception.
-    throw Exception('Failed to load album');
+    if (response.statusCode == 200) {
+      print('User retrieved successfully');
+      return User.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+    } else if(response.statusCode == 204) {
+      print('User not found');
+      return null;
+    }
+    else {
+      print('Failed to retrieve user');
+      throw Exception('Failed to retrieve user');
+    }
   }
+
 }

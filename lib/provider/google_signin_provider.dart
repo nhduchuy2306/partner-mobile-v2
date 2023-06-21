@@ -23,6 +23,7 @@ class GoogleSignInProvider extends ChangeNotifier {
       print(e.toString());
     }
     notifyListeners();
+    return _user;
   }
 
   Future<dynamic> googleLogout() async {

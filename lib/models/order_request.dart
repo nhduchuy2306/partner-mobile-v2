@@ -29,7 +29,7 @@ class CartItems {
   String? productName;
   String? productImage;
   int? quantity;
-  int? price;
+  double? price;
 
   CartItems(
       {this.productId,

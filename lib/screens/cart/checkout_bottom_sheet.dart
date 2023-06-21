@@ -1,4 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:partner_mobile/models/cart_item.dart';
+import 'package:partner_mobile/models/order_request.dart';
+import 'package:partner_mobile/provider/cart_provider.dart';
+import 'package:partner_mobile/services/order_service.dart';
+import 'package:provider/provider.dart';
 
 class CheckoutBottomSheet extends StatefulWidget {
   const CheckoutBottomSheet({super.key, required this.totalAmount});
@@ -10,6 +16,23 @@ class CheckoutBottomSheet extends StatefulWidget {
 }
 
 class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
+  late User? user = FirebaseAuth.instance.currentUser;
+  late UserInfo? userInfo = user?.providerData[0];
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      user = FirebaseAuth.instance.currentUser;
+      userInfo = user?.providerData[0];
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -66,31 +89,48 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
             margin: const EdgeInsets.only(
               top: 25,
             ),
-            child: GestureDetector(
-              onTap: () {
-                onPlaceOrderClicked();
-              },
-              child: Container(
-                width: double.maxFinite,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 20,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFC6A57),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: const Center(
-                  child: Text(
-                    "Place Order",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+            child:
+                Consumer<CartProvider>(builder: (context, cartProvider, child) {
+              return GestureDetector(
+                onTap: () {
+                  if (userInfo == null) {
+                    showErrorDialog();
+                  }
+                  Future<String> playOrderFuture =
+                      placeOrder(cartProvider.cartItems);
+                  playOrderFuture.then((value) {
+                    if (value == "success") {
+                      cartProvider.clearCart();
+                      Navigator.pop(context);
+                      showOrderPlacedDialog();
+                    } else {
+                      Navigator.pop(context);
+                      showOrderFailedDialog();
+                    }
+                  });
+                },
+                child: Container(
+                  width: double.maxFinite,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 20,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFC6A57),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      "Place Order",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
+              );
+            }),
           ),
         ],
       ),
@@ -111,7 +151,7 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
           style: TextStyle(
             color: const Color(0xFF7C7C7C),
             fontSize: 14,
-            fontFamily: Theme.of(context).textTheme.bodyText1?.fontFamily,
+            fontFamily: Theme.of(context).textTheme.bodyLarge?.fontFamily,
             fontWeight: FontWeight.w600,
           ),
           children: const [
@@ -172,14 +212,73 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
     );
   }
 
-  void onPlaceOrderClicked() {
-    Navigator.pop(context);
+  Future<String> placeOrder(List<CartItem> carts) async {
+    if (carts.isEmpty) {
+      return "empty";
+    }
+
+    List<CartItems> cartItems = [];
+
+    for (var cart in carts) {
+      cartItems.add(CartItems(
+          productId: cart.product?.productId,
+          quantity: cart.quantity,
+          price: cart.product!.price,
+          productName: cart.product!.productName,
+          productImage: cart.product!.picture));
+    }
+
+    var orderRequest =
+        OrderRequest(userName: userInfo?.uid, cartItems: cartItems);
+    var response = await OrderService.createOrder(orderRequest);
+    return response;
+  }
+
+  void showErrorDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Error"),
+            content: const Text("Please login before placing order"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text("OK"),
+              )
+            ],
+          );
+        });
+  }
+
+  void showOrderPlacedDialog() {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text("Order Placed"),
             content: const Text("Your order has been placed successfully"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text("OK"),
+              )
+            ],
+          );
+        });
+  }
+
+  void showOrderFailedDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Order Failed"),
+            content: const Text("Your order has been failed"),
             actions: [
               TextButton(
                 onPressed: () {

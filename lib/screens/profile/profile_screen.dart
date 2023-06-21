@@ -6,9 +6,9 @@ import 'package:partner_mobile/common_widgets/app_button.dart';
 import 'package:partner_mobile/models/customer_membership.dart';
 import 'package:partner_mobile/provider/google_signin_provider.dart';
 import 'package:partner_mobile/screens/login_screen.dart';
+import 'package:partner_mobile/screens/profile/order_history_screen.dart';
+import 'package:partner_mobile/services/customer_membership_service.dart';
 import 'package:partner_mobile/styles/app_colors.dart';
-
-import '../../services/customer_membership_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -29,6 +29,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       user = FirebaseAuth.instance.currentUser;
       userInfo = user?.providerData[0];
+      print("User Info: $userInfo");
       customerMemberShips =
           CustomerMemberShipService.getCustomerMemberShipById("1");
     });
@@ -45,16 +46,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             getProfileOfUser(userInfo),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
-            const SizedBox(
-              height: 20,
+            const Divider(
+              thickness: 1,
+            ),
+            settingBar(userInfo),
+            const Divider(
+              thickness: 1,
             ),
             logoutButton(userInfo),
             const SizedBox(
               height: 20,
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget settingBar(userInfo) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          PageTransition(
+            type: PageTransitionType.rightToLeft,
+            child: OrderHistoryScreen(userInfo: userInfo),
+          ),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20),
+        child: const ListTile(
+          leading: Icon(
+            Icons.history,
+            color: Colors.black,
+            size: 30,
+          ),
+          title: Text(
+            "Order History",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          subtitle: Text(
+            "My Order History",
+            style: TextStyle(
+                fontSize: 16,
+                color: Color(0xff7C7C7C),
+                fontWeight: FontWeight.normal),
+          ),
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            color: Color(0xff7C7C7C),
+            size: 20,
+          ),
         ),
       ),
     );

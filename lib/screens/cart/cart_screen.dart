@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:partner_mobile/models/cart_item.dart';
 import 'package:partner_mobile/models/product.dart';
 import 'package:partner_mobile/models/product_description.dart';
 import 'package:partner_mobile/models/product_picture.dart';
