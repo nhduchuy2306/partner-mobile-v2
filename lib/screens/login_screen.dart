@@ -7,7 +7,6 @@ import 'package:partner_mobile/provider/google_signin_provider.dart';
 import 'package:partner_mobile/screens/dashboard/dashboard_screen.dart';
 import 'package:partner_mobile/services/user_service.dart';
 import 'package:partner_mobile/styles/app_colors.dart';
-import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -65,18 +64,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                       final GoogleSignInProvider googleSignInProvider =
                           GoogleSignInProvider();
-                      GoogleSignInAccount user = await googleSignInProvider.googleLogin();
+                      GoogleSignInAccount user =
+                          await googleSignInProvider.googleLogin();
                       if (user != null) {
                         UserInfo userInfo = UserInfo(
-                          displayName: user.displayName,
-                          email: user.email,
-                          phoneNumber: "",
-                          photoURL: user.photoUrl,
-                          uid: user.id,
-                          providerId: ""
-                        );
-                        User? userModel = await UserService.getUserByUsername(user.displayName ?? "");
-                        if(userModel == null) {
+                            displayName: user.displayName,
+                            email: user.email,
+                            phoneNumber: "",
+                            photoURL: user.photoUrl,
+                            uid: user.id,
+                            providerId: "");
+                        User? userModel = await UserService.getUserByUsername(
+                            user.displayName ?? "");
+                        if (userModel == null) {
                           await UserService.register(userInfo);
                         }
                       }

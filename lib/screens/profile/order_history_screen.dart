@@ -13,13 +13,13 @@ class OrderHistoryScreen extends StatefulWidget {
 }
 
 class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
-
   late Future<List<Order>> _getAllOrders;
 
   @override
   void initState() {
     super.initState();
-    _getAllOrders = OrderService.getOrdersByUsername(widget.userInfo?.uid ?? "");
+    _getAllOrders =
+        OrderService.getOrdersByUsername(widget.userInfo?.uid ?? "");
   }
 
   @override
@@ -31,33 +31,34 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
       ),
       body: SingleChildScrollView(
         child: FutureBuilder<List<Order>>(
-            future: _getAllOrders,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data?.length,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: ListTile(
-                        title: Text(snapshot.data?[index].date ?? ""),
-                        subtitle: Text(widget.userInfo?.displayName ?? ""),
-                        trailing: Text("${snapshot.data?[index].total?.toStringAsFixed(0)} VND" ?? ""),
-                      ),
-                    );
-                  },
-                );
-              } else if (snapshot.hasError) {
-                return Text("${snapshot.error}");
-              }
-              return Container(
-                  padding: const EdgeInsets.all(20),
-                  child: const Center(
-                    child: CircularProgressIndicator(),
-                  )
+          future: _getAllOrders,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: snapshot.data?.length,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return Card(
+                    child: ListTile(
+                      title: Text(snapshot.data?[index].date ?? ""),
+                      subtitle: Text(widget.userInfo?.displayName ?? ""),
+                      trailing: Text(
+                          "${snapshot.data?[index].total?.toStringAsFixed(0)} VND" ??
+                              ""),
+                    ),
+                  );
+                },
               );
+            } else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
             }
+            return Container(
+                padding: const EdgeInsets.all(20),
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ));
+          },
         ),
       ),
     );

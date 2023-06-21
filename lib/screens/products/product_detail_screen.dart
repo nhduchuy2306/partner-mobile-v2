@@ -98,12 +98,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: Consumer<CartProvider>(builder: (context, cartProvider,child){
+      bottomNavigationBar:
+          Consumer<CartProvider>(builder: (context, cartProvider, child) {
         return Container(
           margin: const EdgeInsets.all(15),
           child: ElevatedButton(
             onPressed: () {
-              cartProvider.addToCart(widget.product,_amount);
+              cartProvider.addToCart(widget.product, _amount);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
@@ -268,51 +269,67 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 if (snapshot.hasData) {
                   return Table(
                     border: TableBorder.all(
-                        color: Colors.grey,
-                        width: 1,
+                      color: Colors.grey,
+                      width: 1,
                     ),
                     children: [
                       buildRow(["Information", "Value"], isHeader: true),
-                      if(snapshot.data!.keycap != null)
+                      if (snapshot.data!.keycap != null)
                         buildRow(["KeyCap", snapshot.data!.keycap ?? ""]),
-                      if(snapshot.data!.switchKeyBoard != null)
-                        buildRow(["Switch Key Board", snapshot.data!.switchKeyBoard ?? ""]),
-                      if(snapshot.data!.typeKeyboard != null)
-                        buildRow(["Type Key board", snapshot.data!.typeKeyboard ?? ""]),
-                      if(snapshot.data!.connect != null)
+                      if (snapshot.data!.switchKeyBoard != null)
+                        buildRow([
+                          "Switch Key Board",
+                          snapshot.data!.switchKeyBoard ?? ""
+                        ]),
+                      if (snapshot.data!.typeKeyboard != null)
+                        buildRow([
+                          "Type Key board",
+                          snapshot.data!.typeKeyboard ?? ""
+                        ]),
+                      if (snapshot.data!.connect != null)
                         buildRow(["Connect", snapshot.data!.connect ?? ""]),
-                      if(snapshot.data!.led != null)
+                      if (snapshot.data!.led != null)
                         buildRow(["Led", snapshot.data!.led ?? ""]),
-                      if(snapshot.data!.freigh != null)
+                      if (snapshot.data!.freigh != null)
                         buildRow(["Freigh", snapshot.data!.freigh ?? ""]),
-                      if(snapshot.data!.itemDimension != null)
-                        buildRow(["Item Dimension", snapshot.data!.itemDimension ?? ""]),
-                      if(snapshot.data!.ram != null)
+                      if (snapshot.data!.itemDimension != null)
+                        buildRow([
+                          "Item Dimension",
+                          snapshot.data!.itemDimension ?? ""
+                        ]),
+                      if (snapshot.data!.ram != null)
                         buildRow(["Ram", snapshot.data!.ram ?? ""]),
-                      if(snapshot.data!.operatingSystem != null)
-                        buildRow(["Operating System", snapshot.data!.operatingSystem ?? ""]),
-                      if(snapshot.data!.battery != null)
+                      if (snapshot.data!.operatingSystem != null)
+                        buildRow([
+                          "Operating System",
+                          snapshot.data!.operatingSystem ?? ""
+                        ]),
+                      if (snapshot.data!.battery != null)
                         buildRow(["Battery", snapshot.data!.battery ?? ""]),
-                      if(snapshot.data!.hardDisk != null)
+                      if (snapshot.data!.hardDisk != null)
                         buildRow(["Hard Disk", snapshot.data!.hardDisk ?? ""]),
-                      if(snapshot.data!.graphicCard != null)
-                        buildRow(["Graphic Card", snapshot.data!.graphicCard ?? ""]),
-                      if(snapshot.data!.keyBoard != null)
+                      if (snapshot.data!.graphicCard != null)
+                        buildRow(
+                            ["Graphic Card", snapshot.data!.graphicCard ?? ""]),
+                      if (snapshot.data!.keyBoard != null)
                         buildRow(["Key Board", snapshot.data!.keyBoard ?? ""]),
-                      if(snapshot.data!.audio != null)
+                      if (snapshot.data!.audio != null)
                         buildRow(["Audio", snapshot.data!.audio ?? ""]),
-                      if(snapshot.data!.wifi != null)
+                      if (snapshot.data!.wifi != null)
                         buildRow(["Wifi", snapshot.data!.wifi ?? ""]),
-                      if(snapshot.data!.bluetooth != null)
+                      if (snapshot.data!.bluetooth != null)
                         buildRow(["Bluetooth", snapshot.data!.bluetooth ?? ""]),
-                      if(snapshot.data!.color != null)
+                      if (snapshot.data!.color != null)
                         buildRow(["Color", snapshot.data!.color ?? ""]),
-                      if(snapshot.data!.frameRate != null)
-                        buildRow(["Frame Rate", snapshot.data!.frameRate ?? ""]),
-                      if(snapshot.data!.screenSize != null)
-                        buildRow(["Screen Size", snapshot.data!.screenSize ?? ""]),
-                      if(snapshot.data!.screenType != null)
-                        buildRow(["Screen Type", snapshot.data!.screenType ?? ""]),
+                      if (snapshot.data!.frameRate != null)
+                        buildRow(
+                            ["Frame Rate", snapshot.data!.frameRate ?? ""]),
+                      if (snapshot.data!.screenSize != null)
+                        buildRow(
+                            ["Screen Size", snapshot.data!.screenSize ?? ""]),
+                      if (snapshot.data!.screenType != null)
+                        buildRow(
+                            ["Screen Type", snapshot.data!.screenType ?? ""]),
                     ],
                   );
                 } else {
