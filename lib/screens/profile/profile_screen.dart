@@ -237,13 +237,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
-                            padding: const EdgeInsets.only(left: 30),
+                            margin: const EdgeInsets.only(left: 30),
                             width: MediaQuery.of(context).size.width / 3,
                             child: Row(
                               children: [
                                 const Icon(
                                   FontAwesomeIcons.rankingStar,
-                                  color: Colors.black,
+                                  color: Colors.blueAccent,
                                   size: 15,
                                 ),
                                 const SizedBox(
@@ -260,12 +260,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.only(left: 70),
+                            margin: const EdgeInsets.only(left: 70),
                             child: Row(
                               children: [
                                 const Icon(
                                   FontAwesomeIcons.wallet,
-                                  color: Colors.black,
+                                  color: Colors.deepOrangeAccent,
                                   size: 15,
                                 ),
                                 const SizedBox(
@@ -290,38 +290,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
-                            padding: const EdgeInsets.only(left: 30),
+                            margin: const EdgeInsets.only(left: 30),
                             width: MediaQuery.of(context).size.width / 3,
                             child: Row(
                               children: [
                                 const Icon(
                                   FontAwesomeIcons.medal,
-                                  color: Colors.black,
+                                  color: Colors.amber,
                                   size: 15,
                                 ),
                                 const SizedBox(
                                   width: 10,
                                 ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                Stack(
+                                  alignment: Alignment.center,
                                   children: [
                                     SizedBox(
-                                      width: MediaQuery.of(context).size.width / 6,
+                                      width: MediaQuery.of(context).size.width / 5,
                                       child: LinearProgressIndicator(
                                         value: ((snapshot.data?.membership?.totalReceipt ?? 1) /
                                             (snapshot.data?.nextLevel?.condition ?? 2)),
                                         backgroundColor: Colors.grey[300],
                                         valueColor: const AlwaysStoppedAnimation(
-                                            AppColors.primaryColor),
-                                        minHeight: 15,
+                                            Colors.orange),
+                                        minHeight: 20,
                                       ),
                                     ),
                                     Text(
                                       "${snapshot.data?.membership?.totalReceipt?.toStringAsFixed(0)}/"
                                       "${snapshot.data?.nextLevel?.condition?.toStringAsFixed(0)}",
                                       style: const TextStyle(
-                                        fontSize: 15,
+                                        fontSize: 10,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -336,7 +335,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               children: [
                                 const Icon(
                                   FontAwesomeIcons.coins,
-                                  color: Colors.black,
+                                  color: Colors.lime,
                                   size: 15,
                                 ),
                                 const SizedBox(

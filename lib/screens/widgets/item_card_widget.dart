@@ -59,7 +59,7 @@ class ItemCardWidget extends StatelessWidget {
                 Text(
                   "${item.price?.toStringAsFixed(0)} VND",
                   style: const TextStyle(
-                    fontSize: 13,
+                    fontSize: 10,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -106,8 +106,8 @@ class ItemCardWidget extends StatelessWidget {
 
   Widget addWidget() {
     return Container(
-      height: 30,
-      width: 30,
+      height: 25,
+      width: 25,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(17),
           color: AppColors.primaryColor),
