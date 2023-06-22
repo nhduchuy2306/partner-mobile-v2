@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:partner_mobile/helpers/asset_helper.dart';
 import 'package:partner_mobile/models/product.dart';
 import 'package:partner_mobile/models/product_description.dart';
 import 'package:partner_mobile/models/product_picture.dart';
@@ -146,8 +147,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(10)),
                               child: Image.network(
-                                e.pictureUrl ??
-                                    "https://firebasestorage.googleapis.com/v0/b/gadgetzone-49cd4.appspot.com/o/headphones-14672.png?alt=media&token=74f5ed8f-df69-403e-b402-a3006afc919c",
+                                e.pictureUrl ?? AssetHelper.imageProduct,
                                 fit: BoxFit.cover,
                                 width: 1000,
                               ),

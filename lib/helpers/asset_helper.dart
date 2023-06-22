@@ -2,17 +2,7 @@ class AssetHelper {
   // Banner
   static const String imageBanner = 'assets/images/main_banner_image.png';
 
-  // demo products
-  static const String imageProduct1 =
-      'assets/images/product_images/product_1.png';
-  static const String imageProduct2 =
-      'assets/images/product_images/product_2.png';
-  static const String imageProduct3 =
-      'assets/images/product_images/product_3.png';
-  static const String imageProduct4 =
-      'assets/images/product_images/product_4.png';
-  static const String imageProduct5 =
-      'assets/images/product_images/product_5.png';
-  static const String imageProduct6 =
-      'assets/images/product_images/product_6.png';
+  // demo pictures
+  static const String imageProduct =
+      'https://firebasestorage.googleapis.com/v0/b/gadgetzone-49cd4.appspot.com/o/headphones-14672.png?alt=media&token=74f5ed8f-df69-403e-b402-a3006afc919c';
 }
