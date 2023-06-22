@@ -29,7 +29,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       user = FirebaseAuth.instance.currentUser;
       userInfo = user?.providerData[0];
-      print("User Info: $userInfo");
       customerMemberShips =
           CustomerMemberShipService.getCustomerMemberShipById("1");
     });
@@ -303,14 +302,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 const SizedBox(
                                   width: 10,
                                 ),
-                                Text(
-                                  "${snapshot.data?.membership?.totalReceipt?.toStringAsFixed(0)}/"
-                                  "${snapshot.data?.nextLevel?.condition?.toStringAsFixed(0)}",
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width / 6,
+                                      child: LinearProgressIndicator(
+                                        value: ((snapshot.data?.membership?.totalReceipt ?? 1) /
+                                            (snapshot.data?.nextLevel?.condition ?? 2)),
+                                        backgroundColor: Colors.grey[300],
+                                        valueColor: const AlwaysStoppedAnimation(
+                                            AppColors.primaryColor),
+                                        minHeight: 15,
+                                      ),
+                                    ),
+                                    Text(
+                                      "${snapshot.data?.membership?.totalReceipt?.toStringAsFixed(0)}/"
+                                      "${snapshot.data?.nextLevel?.condition?.toStringAsFixed(0)}",
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                )
                               ],
                             ),
                           ),
