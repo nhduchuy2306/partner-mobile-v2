@@ -32,20 +32,28 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Product> latestProducts = [];
   List<Product> bestSellingProducts = [];
 
+  late Future<List<Category>> futureCategories;
+  late Future<List<Product>> futureLatestProducts;
+  late Future<List<Product>> futureBestSellingProducts;
+
   @override
   void initState() {
     super.initState();
-    CategoryService.getCategories().then((value) {
+    futureCategories = CategoryService.getCategories();
+    futureLatestProducts = ProductService.getLatestProducts();
+    futureBestSellingProducts = ProductService.getBestSellingProducts();
+
+    futureCategories.then((value) {
       setState(() {
         categories = value;
       });
     });
-    ProductService.getLatestProducts().then((value) {
+    futureLatestProducts.then((value) {
       setState(() {
         latestProducts = value;
       });
     });
-    ProductService.getBestSellingProducts().then((value) {
+    futureBestSellingProducts.then((value) {
       setState(() {
         bestSellingProducts = value;
       });
@@ -75,14 +83,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   Column(
                     children: [
                       padded(subTitle("Best Selling", TitleEnum.bestSelling)),
-                      getHorizontalItemSlider(bestSellingProducts),
+                      getHorizontalItemSliderWithFuture(
+                          futureBestSellingProducts),
                     ],
                   ),
                 const SizedBox(
                   height: 15,
                 ),
-                padded(subTitle("Latest Product", TitleEnum.latestProduct)),
-                getHorizontalItemSlider(latestProducts),
+                if (latestProducts.isNotEmpty)
+                  Column(
+                    children: [
+                      padded(
+                          subTitle("Latest Product", TitleEnum.latestProduct)),
+                      getHorizontalItemSliderWithFuture(futureLatestProducts),
+                    ],
+                  ),
                 const SizedBox(
                   height: 15,
                 ),
@@ -90,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(
                   height: 15,
                 ),
-                getHorizontalCategory(categories),
+                getHorizontalCategoryWithFuture(futureCategories),
                 const SizedBox(
                   height: 15,
                 ),
@@ -136,6 +151,27 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  // get all products using future
+  Widget getHorizontalItemSliderWithFuture(
+      Future<List<Product>> futureProducts) {
+    return FutureBuilder<List<Product>>(
+      future: futureProducts,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return getHorizontalItemSlider(snapshot.data!);
+        } else if (snapshot.hasError) {
+          return const Center(
+            child: Text("Error"),
+          );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
     );
   }
 
@@ -188,6 +224,27 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         },
       ),
+    );
+  }
+
+  // get all catergories using future
+  Widget getHorizontalCategoryWithFuture(
+      Future<List<Category>> futureCategories) {
+    return FutureBuilder<List<Category>>(
+      future: futureCategories,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return getHorizontalCategory(snapshot.data!);
+        } else if (snapshot.hasError) {
+          return const Center(
+            child: Text("Error"),
+          );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
     );
   }
 

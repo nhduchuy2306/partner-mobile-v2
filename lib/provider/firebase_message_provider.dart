@@ -1,6 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-class MyFirebaseMessagingConfig {
+class MyFirebaseMessagingProvider {
   Future<void> initialize() async {
     await FirebaseMessaging.instance.requestPermission(
       alert: true,
@@ -35,7 +35,7 @@ class MyFirebaseMessagingConfig {
     print("onBackgroundMessage: $message");
   }
 
-  Future<String?> getToken() async {
+  Future<String?> getFCMToken() async {
     String? token = await FirebaseMessaging.instance.getToken();
     return token;
   }

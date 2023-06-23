@@ -101,7 +101,7 @@ class ItemCardWidget extends StatelessWidget {
   Widget imageWidget() {
     return Image.network(
       item.picture!,
-      width: 100,
+      width: 150,
       height: 100,
       fit: BoxFit.cover,
     );

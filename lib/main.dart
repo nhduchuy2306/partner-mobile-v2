@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:partner_mobile/provider/FirebaseMessageConfig.dart';
+import 'package:partner_mobile/provider/firebase_message_provider.dart';
 import 'package:partner_mobile/provider/cart_provider.dart';
 import 'package:partner_mobile/provider/google_signin_provider.dart';
 import 'package:partner_mobile/screens/splash_screen.dart';
@@ -10,10 +10,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  final firebaseMessagingConfig = MyFirebaseMessagingConfig();
-  await firebaseMessagingConfig.initialize();
-  String? token = await firebaseMessagingConfig.getToken();
-  print("FCM Token: $token");
+  final firebaseMessagingProvider = MyFirebaseMessagingProvider();
+  await firebaseMessagingProvider.initialize();
+  String? token = await firebaseMessagingProvider.getFCMToken();
+  print("FirebaseMessaging token: $token");
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => CartProvider()),
