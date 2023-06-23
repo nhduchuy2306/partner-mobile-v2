@@ -24,6 +24,7 @@ class MyFirebaseMessagingConfig {
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
+      print("onResume: ${message.notification?.title}");
       print("onResume: ${message.notification?.body}");
     });
 
