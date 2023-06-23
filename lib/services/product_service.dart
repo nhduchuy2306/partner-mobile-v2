@@ -45,7 +45,7 @@ class ProductService {
     List<Product> products = [];
     if (response.statusCode == 200) {
       var productsJson = json.decode(utf8.decode(response.bodyBytes));
-      for (var productJson in productsJson) {
+      for (var productJson in productsJson[0]) {
         products.add(Product.fromJson(productJson));
       }
     }

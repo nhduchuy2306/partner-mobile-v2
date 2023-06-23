@@ -21,7 +21,6 @@ class UserService {
       print('User already exists');
       return null;
     }
-
   }
 
   static Future<User?> getUserByUsername(String username) async {

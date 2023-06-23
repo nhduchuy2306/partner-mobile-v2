@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:page_transition/page_transition.dart';
 import 'package:partner_mobile/models/brand.dart';
 import 'package:partner_mobile/models/category.dart';
@@ -15,6 +12,7 @@ import 'package:partner_mobile/services/brand_service.dart';
 import 'package:partner_mobile/services/category_service.dart';
 import 'package:partner_mobile/services/product_description_service.dart';
 import 'package:partner_mobile/services/product_picture_service.dart';
+import 'package:partner_mobile/services/product_service.dart';
 
 class ShopScreen extends StatefulWidget {
   const ShopScreen({super.key});
@@ -29,7 +27,7 @@ class _ShopScreenState extends State<ShopScreen> {
   bool _isFirstLoadRunning = false;
   bool _hasNextPage = true;
   bool _isLoadMoreRunning = false;
-  final List<Product> _products = [];
+  List<Product> _products = [];
 
   late ScrollController _scrollController;
 
@@ -49,21 +47,17 @@ class _ShopScreenState extends State<ShopScreen> {
       });
       _page += 1;
       try {
-        final res = await http.get(Uri.parse("$_baseUrl/products?p=$_page"));
-        if (res.statusCode == 200) {
-          final productsJson = json.decode(utf8.decode(res.bodyBytes));
-          if (productsJson.length == 0) {
-            setState(() {
-              _hasNextPage = false;
-            });
-          } else {
-            setState(() {
-              _hasNextPage = true;
-            });
-            for (var productJson in productsJson[0]) {
-              _products.add(Product.fromJson(productJson));
-            }
-          }
+        final listProducts =
+            await ProductService.getAllProductPagination(_page);
+        if (listProducts.isEmpty) {
+          setState(() {
+            _hasNextPage = false;
+          });
+        } else {
+          setState(() {
+            _hasNextPage = true;
+          });
+          _products = listProducts;
         }
       } catch (e) {
         print("Something went wrong: $e");
@@ -81,12 +75,16 @@ class _ShopScreenState extends State<ShopScreen> {
     });
 
     try {
-      final res = await http.get(Uri.parse("$_baseUrl/products?p=$_page"));
-      if (res.statusCode == 200) {
-        final productsJson = json.decode(utf8.decode(res.bodyBytes));
-        for (var productJson in productsJson[0]) {
-          _products.add(Product.fromJson(productJson));
-        }
+      final listProducts = await ProductService.getAllProductPagination(_page);
+      if (listProducts.isEmpty) {
+        setState(() {
+          _hasNextPage = false;
+        });
+      } else {
+        setState(() {
+          _hasNextPage = true;
+        });
+        _products = listProducts;
       }
     } catch (e) {
       print("Something went wrong: $e");
