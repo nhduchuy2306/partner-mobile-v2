@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:partner_mobile/models/user.dart';
 import 'package:partner_mobile/models/user_info.dart';
 import 'package:partner_mobile/provider/google_signin_provider.dart';
@@ -54,14 +55,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   child: GestureDetector(
                     onTap: () async {
-                      // showDialog(
-                      //   context: context,
-                      //   builder: (context) => const Center(
-                      //     child: CircularProgressIndicator(
-                      //       color: AppColors.primaryColor,
-                      //     ),
-                      //   ),
-                      // );
+                      showDialog(
+                        context: context,
+                        builder: (context) => const Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                      );
                       final GoogleSignInProvider googleSignInProvider =
                           GoogleSignInProvider();
                       GoogleSignInAccount user =
@@ -83,8 +84,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       Future.delayed(const Duration(seconds: 1), () {
                         Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => const DashBoardScreen(),
+                            PageTransition(
+                              type: PageTransitionType.fade,
+                              child: const DashBoardScreen(),
                             ));
                       });
                     },

@@ -179,8 +179,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           await googleSignInProvider.googleLogout();
           setState(() {
             user = null;
+            this.userInfo = null;
           });
-          Navigator.pop(context);
+          Future.delayed(
+            const Duration(seconds: 1),
+            () {
+              Navigator.pop(context);
+            },
+          );
         },
       ),
     );
@@ -306,13 +312,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   alignment: Alignment.center,
                                   children: [
                                     SizedBox(
-                                      width: MediaQuery.of(context).size.width / 5,
+                                      width:
+                                          MediaQuery.of(context).size.width / 5,
                                       child: LinearProgressIndicator(
-                                        value: ((snapshot.data?.membership?.totalReceipt ?? 1) /
-                                            (snapshot.data?.nextLevel?.condition ?? 2)),
+                                        value: ((snapshot.data?.membership
+                                                    ?.totalReceipt ??
+                                                1) /
+                                            (snapshot.data?.nextLevel
+                                                    ?.condition ??
+                                                2)),
                                         backgroundColor: Colors.grey[300],
-                                        valueColor: const AlwaysStoppedAnimation(
-                                            Colors.orange),
+                                        valueColor:
+                                            const AlwaysStoppedAnimation(
+                                                Colors.orange),
                                         minHeight: 20,
                                       ),
                                     ),
@@ -363,7 +375,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
     } else {
       return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 25),
+        margin: const EdgeInsets.symmetric(horizontal: 20),
         height: 65,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -375,7 +387,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               thickness: 1,
               fontWeight: FontWeight.bold,
               padding: const EdgeInsets.all(10),
-              fontSize: 18,
+              fontSize: 20,
               onTap: () {
                 Navigator.push(
                   context,
@@ -395,7 +407,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               thickness: 1,
               fontWeight: FontWeight.bold,
               padding: const EdgeInsets.all(10),
-              fontSize: 18,
+              fontSize: 20,
               onTap: () {
                 Navigator.push(
                   context,
