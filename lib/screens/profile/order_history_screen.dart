@@ -34,6 +34,14 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
           future: _getAllOrders,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              if (snapshot.data!.isEmpty) {
+                return Container(
+                  padding: const EdgeInsets.all(20),
+                  child: const Center(
+                    child: Text("No order history"),
+                  ),
+                );
+              }
               return ListView.builder(
                 shrinkWrap: true,
                 itemCount: snapshot.data?.length,

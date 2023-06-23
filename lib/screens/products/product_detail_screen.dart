@@ -273,6 +273,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasData) {
+                  if (snapshot.data == null) {
+                    return const Center(
+                      child: Text("No data"),
+                    );
+                  }
                   return Table(
                     border: TableBorder.all(
                       color: Colors.grey,

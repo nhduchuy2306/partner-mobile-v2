@@ -37,7 +37,7 @@ class OrderService {
       return orders;
     } else {
       print('Failed to retrieve orders');
-      throw Exception('Failed to retrieve orders');
+      return orders;
     }
   }
 }
