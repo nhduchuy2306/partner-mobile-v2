@@ -45,11 +45,11 @@ class _HomeScreenState extends State<HomeScreen> {
         latestProducts = value;
       });
     });
-    ProductService.getBestSellingProducts().then((value) => {
-          setState(() {
-            bestSellingProducts = value;
-          })
-        });
+    ProductService.getBestSellingProducts().then((value) {
+      setState(() {
+        bestSellingProducts = value;
+      });
+    });
   }
 
   @override
@@ -155,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
-      height: 250,
+      height: 270,
       child: ListView.separated(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         itemCount: items.length,

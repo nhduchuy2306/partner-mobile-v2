@@ -55,8 +55,8 @@ class ShoppingCartItem extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              height: 80,
-              width: 80,
+              height: 100,
+              width: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
                 image: DecorationImage(
@@ -96,7 +96,7 @@ class ShoppingCartItem extends StatelessWidget {
                                 .decreaseCartItemQuantity(product!.productId!);
                           },
                           child: Container(
-                            padding: const EdgeInsets.all(2),
+                            padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               color: const Color(0xff489E67),
                               borderRadius: BorderRadius.circular(4),
@@ -114,7 +114,7 @@ class ShoppingCartItem extends StatelessWidget {
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 2),
+                            horizontal: 10, vertical: 8),
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey.shade300),
                         ),
@@ -134,7 +134,7 @@ class ShoppingCartItem extends StatelessWidget {
                                 .increaseCartItemQuantity(product!.productId!);
                           },
                           child: Container(
-                            padding: const EdgeInsets.all(2),
+                            padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               color: const Color(0xff489E67),
                               borderRadius: BorderRadius.circular(4),

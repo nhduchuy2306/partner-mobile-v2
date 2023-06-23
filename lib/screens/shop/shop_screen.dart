@@ -165,7 +165,7 @@ class _ShopScreenState extends State<ShopScreen> {
               child: CircularProgressIndicator(),
             )
           : Container(
-              margin: const EdgeInsets.all(20),
+              margin: const EdgeInsets.all(2),
               child: Column(
                 children: [
                   Expanded(
@@ -173,7 +173,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        childAspectRatio: 0.8,
+                        childAspectRatio: 0.6,
                       ),
                       controller: _scrollController,
                       itemCount: _products.length,

@@ -36,13 +36,11 @@ class ItemCardWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Center(
-                child: imageWidget(),
-              ),
+            Center(
+              child: imageWidget(),
             ),
             const SizedBox(
-              height: 20,
+              height: 16,
             ),
             Text(
               item.productName!,
@@ -51,44 +49,49 @@ class ItemCardWidget extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              children: [
-                Text(
-                  "${item.price?.toStringAsFixed(0)} VND",
-                  style: const TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Spacer(),
-                Consumer<CartProvider>(
-                  builder: (context, cartProvider, child) {
-                    return GestureDetector(
-                      onTap: () {
-                        cartProvider.addToCart(item, 1);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Add to cart successfully!'),
-                            duration: Duration(seconds: 1),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryColor,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: addWidget(),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Center(
+                    child: Text(
+                      "${item.price?.toStringAsFixed(0)} VND",
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
                       ),
-                    );
-                  },
-                ),
-              ],
-            )
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Consumer<CartProvider>(
+                    builder: (context, cartProvider, child) {
+                      return GestureDetector(
+                        onTap: () {
+                          cartProvider.addToCart(item, 1);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Add to cart successfully!'),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColor,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: addWidget(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -98,24 +101,26 @@ class ItemCardWidget extends StatelessWidget {
   Widget imageWidget() {
     return Image.network(
       item.picture!,
-      width: 300,
-      height: 300,
+      width: 100,
+      height: 100,
       fit: BoxFit.cover,
     );
   }
 
   Widget addWidget() {
     return Container(
-      height: 25,
-      width: 25,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(17),
           color: AppColors.primaryColor),
       child: const Center(
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 25,
+        child: Text(
+          "Add To Cart",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
