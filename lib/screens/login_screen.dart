@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:partner_mobile/helpers/constant_value.dart';
+import 'package:partner_mobile/models/partner_token.dart';
 import 'package:partner_mobile/models/user.dart';
 import 'package:partner_mobile/models/user_info.dart';
 import 'package:partner_mobile/provider/google_signin_provider.dart';
 import 'package:partner_mobile/screens/dashboard/dashboard_screen.dart';
+import 'package:partner_mobile/services/customer_membership_service.dart';
 import 'package:partner_mobile/services/user_service.dart';
 import 'package:partner_mobile/styles/app_colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -63,11 +67,26 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       );
+                      final SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
                       final GoogleSignInProvider googleSignInProvider =
                           GoogleSignInProvider();
                       GoogleSignInAccount user =
                           await googleSignInProvider.googleLogin();
                       if (user != null) {
+                        PartnerToken partnerToken = PartnerToken(
+                          userName: ConstantValue.partnerUsername,
+                          password: ConstantValue.partnerPassword,
+                        );
+                        String? partnerTokenFromAdmin =
+                            await CustomerMemberShipService.getTokenOfPartner(
+                                partnerToken);
+                        print("partnerTokenFromAdmin: $partnerTokenFromAdmin" ??
+                            "");
+                        if (partnerTokenFromAdmin != null) {
+                          prefs.setString(
+                              "partnerTokenFromAdmin", partnerTokenFromAdmin);
+                        }
                         UserInfo userInfo = UserInfo(
                             displayName: user.displayName,
                             email: user.email,

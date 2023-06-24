@@ -2,9 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:partner_mobile/models/cart_item.dart';
 import 'package:partner_mobile/models/order_request.dart';
+import 'package:partner_mobile/models/push_notification.dart';
 import 'package:partner_mobile/provider/cart_provider.dart';
 import 'package:partner_mobile/services/order_service.dart';
+import 'package:partner_mobile/services/push_notification_service.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckoutBottomSheet extends StatefulWidget {
   const CheckoutBottomSheet({super.key, required this.totalAmount});
@@ -92,15 +95,40 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
             child:
                 Consumer<CartProvider>(builder: (context, cartProvider, child) {
               return GestureDetector(
-                onTap: () {
+                onTap: () async {
                   if (userInfo == null) {
                     showErrorDialog();
                   }
+
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  final String? token = prefs.getString('fcmToken');
+
                   Future<String> playOrderFuture =
                       placeOrder(cartProvider.cartItems);
                   playOrderFuture.then((value) {
                     if (value == "success") {
                       cartProvider.clearCart();
+
+                      Data data = Data(
+                          additionalProp1: "New Order",
+                          additionalProp2: "You have a new order",
+                          additionalProp3: "FLUTTER_NOTIFICATION_CLICK");
+
+                      PushNotification pushNotification = PushNotification(
+                          subject: "New Order",
+                          content: "You have a new order",
+                          data: data,
+                          token: token);
+
+                      Future<String> pushNotificationService =
+                          PushNotificationService.createNotification(
+                              pushNotification);
+
+                      pushNotificationService.then((value) {
+                        print(value);
+                      });
+
                       Navigator.pop(context);
                       showOrderPlacedDialog();
                     } else {
@@ -213,7 +241,7 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
   }
 
   Future<String> placeOrder(List<CartItem> carts) async {
-    if(userInfo == null) {
+    if (userInfo == null) {
       return "error";
     }
 

@@ -5,6 +5,7 @@ import 'package:partner_mobile/provider/cart_provider.dart';
 import 'package:partner_mobile/provider/google_signin_provider.dart';
 import 'package:partner_mobile/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,7 +14,9 @@ void main() async {
   final firebaseMessagingProvider = MyFirebaseMessagingProvider();
   await firebaseMessagingProvider.initialize();
   String? token = await firebaseMessagingProvider.getFCMToken();
-  print("FirebaseMessaging token: $token");
+
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString('fcmToken', token ?? "");
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => CartProvider()),
