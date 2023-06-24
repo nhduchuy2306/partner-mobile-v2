@@ -60,60 +60,87 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Future refresh() async {
+    setState(() {
+      futureCategories = CategoryService.getCategories();
+      futureLatestProducts = ProductService.getLatestProducts();
+      futureBestSellingProducts = ProductService.getBestSellingProducts();
+
+      futureCategories.then((value) {
+        setState(() {
+          categories = value;
+        });
+      });
+      futureLatestProducts.then((value) {
+        setState(() {
+          latestProducts = value;
+        });
+      });
+      futureBestSellingProducts.then((value) {
+        setState(() {
+          bestSellingProducts = value;
+        });
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 15,
-                ),
-                padded(const SearchBarWidget()),
-                const SizedBox(
-                  height: 25,
-                ),
-                const HomeBanner(),
-                const SizedBox(
-                  height: 25,
-                ),
-                if (bestSellingProducts.isNotEmpty)
-                  Column(
-                    children: [
-                      padded(subTitle("Best Selling", TitleEnum.bestSelling)),
-                      getHorizontalItemSliderWithFuture(
-                          futureBestSellingProducts),
-                    ],
+        body: RefreshIndicator(
+          onRefresh: refresh,
+          child: SingleChildScrollView(
+            child: Center(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 15,
                   ),
-                const SizedBox(
-                  height: 15,
-                ),
-                if (latestProducts.isNotEmpty)
-                  Column(
-                    children: [
-                      padded(
-                          subTitle("Latest Product", TitleEnum.latestProduct)),
-                      getHorizontalItemSliderWithFuture(futureLatestProducts),
-                    ],
+                  padded(const SearchBarWidget()),
+                  const SizedBox(
+                    height: 25,
                   ),
-                const SizedBox(
-                  height: 15,
-                ),
-                padded(subTitle("Categories", TitleEnum.categories)),
-                const SizedBox(
-                  height: 15,
-                ),
-                getHorizontalCategoryWithFuture(futureCategories),
-                const SizedBox(
-                  height: 15,
-                ),
-                getHorizontalItemSlider(bestSellingProducts),
-                const SizedBox(
-                  height: 15,
-                ),
-              ],
+                  const HomeBanner(),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  if (bestSellingProducts.isNotEmpty)
+                    Column(
+                      children: [
+                        padded(subTitle("Best Selling", TitleEnum.bestSelling)),
+                        getHorizontalItemSliderWithFuture(
+                            futureBestSellingProducts),
+                      ],
+                    ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  if (latestProducts.isNotEmpty)
+                    Column(
+                      children: [
+                        padded(
+                            subTitle("Latest Product", TitleEnum.latestProduct)),
+                        getHorizontalItemSliderWithFuture(futureLatestProducts),
+                      ],
+                    ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  padded(subTitle("Categories", TitleEnum.categories)),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  getHorizontalCategoryWithFuture(futureCategories),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  getHorizontalItemSlider(bestSellingProducts),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -164,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return getHorizontalItemSlider(snapshot.data!);
         } else if (snapshot.hasError) {
           return const Center(
-            child: Text("Error"),
+            child: Text("Error, Must connect to internet"),
           );
         } else {
           return const Center(
@@ -237,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return getHorizontalCategory(snapshot.data!);
         } else if (snapshot.hasError) {
           return const Center(
-            child: Text("Error"),
+            child: Text("Error, Must connect to internet"),
           );
         } else {
           return const Center(

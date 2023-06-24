@@ -158,60 +158,68 @@ class _ShopScreenState extends State<ShopScreen> {
           ),
         ],
       ),
-      body: _isFirstLoadRunning
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : Container(
-              margin: const EdgeInsets.all(2),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.6,
-                      ),
-                      controller: _scrollController,
-                      itemCount: _products.length,
-                      itemBuilder: (context, index) {
-                        final items = _products[index];
-                        return Container(
-                          margin: const EdgeInsets.all(5),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                PageTransition(
-                                  type: PageTransitionType.bottomToTop,
-                                  child: ProductDetailScreen(
-                                    product: items!,
-                                    productDescription:
-                                        getProductDescriptionById(
-                                            items!.productId!),
-                                    productPictures:
-                                        getProductPicture(items!.productId!),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          setState(() {
+            _page = 1;
+          });
+          _firstLoad();
+        },
+        child: _isFirstLoadRunning
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Container(
+                margin: const EdgeInsets.all(2),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.6,
+                        ),
+                        controller: _scrollController,
+                        itemCount: _products.length,
+                        itemBuilder: (context, index) {
+                          final items = _products[index];
+                          return Container(
+                            margin: const EdgeInsets.all(5),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    type: PageTransitionType.bottomToTop,
+                                    child: ProductDetailScreen(
+                                      product: items!,
+                                      productDescription:
+                                          getProductDescriptionById(
+                                              items!.productId!),
+                                      productPictures:
+                                          getProductPicture(items!.productId!),
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                            child: ItemCardWidget(
-                              item: items,
+                                );
+                              },
+                              child: ItemCardWidget(
+                                item: items,
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                  if (_isLoadMoreRunning == true)
-                    const Padding(
-                      padding: EdgeInsets.all(5),
-                      child: CircularProgressIndicator(),
-                    ),
-                ],
+                    if (_isLoadMoreRunning == true)
+                      const Padding(
+                        padding: EdgeInsets.all(5),
+                        child: CircularProgressIndicator(),
+                      ),
+                  ],
+                ),
               ),
-            ),
+      ),
     );
   }
 }

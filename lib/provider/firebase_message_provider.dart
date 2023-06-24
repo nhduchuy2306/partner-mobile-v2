@@ -57,8 +57,11 @@ class MyFirebaseMessagingProvider {
 
     const InitializationSettings initializationSettings =
         InitializationSettings(android: initializationSettingsAndroid);
+
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
+      onDidReceiveNotificationResponse:
+          (NotificationResponse notificationResponse) async {},
     );
 
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
