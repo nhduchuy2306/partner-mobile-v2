@@ -30,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       user = FirebaseAuth.instance.currentUser;
       userInfo = user?.providerData[0];
       customerMemberShips =
-          CustomerMemberShipService.getCustomerMemberShipById("1");
+          CustomerMemberShipService.getCustomerMemberShipById(userInfo?.uid ?? "1");
     });
   }
 

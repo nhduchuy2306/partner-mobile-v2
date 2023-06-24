@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:partner_mobile/helpers/constant_value.dart';
+import 'package:partner_mobile/models/customer_info.dart';
 import 'package:partner_mobile/models/partner_token.dart';
 import 'package:partner_mobile/models/user.dart';
 import 'package:partner_mobile/models/user_info.dart';
@@ -97,7 +98,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         User? userModel = await UserService.getUserByUsername(
                             user.id ?? "");
                         if (userModel == null) {
+                          CustomerInfo customerInfo = CustomerInfo(
+                            customerId: user.id ?? "",
+                            email: user.email,
+                            fullName: user.displayName,
+                            dob: "",
+                            image: user.photoUrl,
+                            phone: ""
+                          );
                           await UserService.register(userInfo);
+                          await CustomerMemberShipService.registerCustomer(customerInfo);
                         }
                       }
                       Future.delayed(const Duration(seconds: 1), () {

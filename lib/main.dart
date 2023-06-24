@@ -15,6 +15,7 @@ void main() async {
   final firebaseMessagingProvider = MyFirebaseMessagingProvider();
   await firebaseMessagingProvider.initialize();
   String? token = await firebaseMessagingProvider.getFCMToken();
+  print("Token: $token");
 
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString('fcmToken', token ?? "");
