@@ -95,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             uid: user.id,
                             providerId: "");
                         User? userModel = await UserService.getUserByUsername(
-                            user.displayName ?? "");
+                            user.id ?? "");
                         if (userModel == null) {
                           await UserService.register(userInfo);
                         }

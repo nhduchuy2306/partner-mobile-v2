@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:partner_mobile/models/cart_item.dart';
+import 'package:partner_mobile/models/customer_membership.dart';
 import 'package:partner_mobile/models/order_request.dart';
 import 'package:partner_mobile/models/push_notification.dart';
 import 'package:partner_mobile/provider/cart_provider.dart';
+import 'package:partner_mobile/provider/payment_wallet_provider.dart';
+import 'package:partner_mobile/services/customer_membership_service.dart';
 import 'package:partner_mobile/services/order_service.dart';
 import 'package:partner_mobile/services/push_notification_service.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +24,7 @@ class CheckoutBottomSheet extends StatefulWidget {
 class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
   late User? user = FirebaseAuth.instance.currentUser;
   late UserInfo? userInfo = user?.providerData[0];
+  late List<int> _selectedPaymentWalletIds;
 
   @override
   void initState() {
@@ -28,6 +32,7 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
     setState(() {
       user = FirebaseAuth.instance.currentUser;
       userInfo = user?.providerData[0];
+      _selectedPaymentWalletIds = [];
     });
   }
 
@@ -79,7 +84,63 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
               trailingWidget: const Icon(
                 Icons.payment,
               ),
-              showArrow: true),
+              showArrow: true, onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                Future<CustomerMemberShip> customerMembershipFuture =
+                    CustomerMemberShipService.getCustomerMemberShipById("1");
+                return AlertDialog(
+                  title: const Text("Payment Wallet"),
+                  content: SingleChildScrollView(
+                    child: Consumer<PaymentWalletProvider>(
+                        builder: (context, paymentWalletProvider, child) {
+                      return FutureBuilder<CustomerMemberShip>(
+                        future: customerMembershipFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return ListBody(
+                              children: snapshot.data!.walletList!.map((item) {
+                                return CheckboxListTile(
+                                    title: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text('${item.type}'),
+                                        Text(
+                                            '\$ ${item.balance!.toStringAsFixed(0)}')
+                                      ],
+                                    ),
+                                    value: paymentWalletProvider
+                                        .selectedPaymentWalletIds
+                                        .contains(item),
+                                    onChanged: (isSelected) {
+                                      if (isSelected!) {
+                                        paymentWalletProvider
+                                            .addPaymentWalletId(item);
+                                      } else {
+                                        paymentWalletProvider
+                                            .removePaymentWalletId(item);
+                                      }
+                                    });
+                              }).toList(),
+                            );
+                          } else if (snapshot.hasError) {
+                            return const Text("Error");
+                          }
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
+                      );
+                    }),
+                  ),
+                );
+              },
+            );
+          }),
           getDivider(),
           checkoutRow("Total Cost",
               trailingText: "${widget.totalAmount.toStringAsFixed(0)} VND"),
@@ -201,41 +262,51 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
   }
 
   Widget checkoutRow(String label,
-      {String? trailingText, Widget? trailingWidget, bool? showArrow}) {
-    return Container(
-      margin: const EdgeInsets.symmetric(
-        vertical: 15,
-      ),
-      child: Row(
-        children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
+      {String? trailingText,
+      Widget? trailingWidget,
+      bool? showArrow,
+      Function()? onTap}) {
+    return GestureDetector(
+      onTap: () {
+        if (onTap != null) {
+          onTap();
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(
+          vertical: 15,
+        ),
+        child: Row(
+          children: [
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
-          const Spacer(),
-          trailingText == null
-              ? (trailingWidget ?? Container())
-              : Text(
-                  trailingText,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF7C7C7C),
+            const Spacer(),
+            trailingText == null
+                ? (trailingWidget ?? Container())
+                : Text(
+                    trailingText,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF7C7C7C),
+                    ),
                   ),
-                ),
-          const SizedBox(
-            width: 20,
-          ),
-          showArrow == null || showArrow == false
-              ? Container()
-              : const Icon(
-                  Icons.arrow_forward_ios,
-                  size: 20,
-                )
-        ],
+            const SizedBox(
+              width: 20,
+            ),
+            showArrow == null || showArrow == false
+                ? Container()
+                : const Icon(
+                    Icons.arrow_forward_ios,
+                    size: 20,
+                  )
+          ],
+        ),
       ),
     );
   }
