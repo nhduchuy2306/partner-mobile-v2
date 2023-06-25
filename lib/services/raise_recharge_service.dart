@@ -11,7 +11,7 @@ class RaiseRechargeService {
   static Future<void> raiseRechargeRequest(RaiseWallet raiseWallet) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String partnerTokenFromAdmin = prefs.getString('partnerTokenFromAdmin') ??
-      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwYXJ0bmVyQGdtYWlsLmNvbSIsImlhdCI6MTY4NzE0MDkyOCwiZXhwIjoxNzA0NDIwOTI4fQ.y5QArBBgjW0BGJH2B9hnFrdMQ92kQmAtSRX-vMKimhahoGBiu2YWGY9nGEmLT8K7GpUbTpT3jaEPCtL-NaRs7A';
+        'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwYXJ0bmVyQGdtYWlsLmNvbSIsImlhdCI6MTY4NzE0MDkyOCwiZXhwIjoxNzA0NDIwOTI4fQ.y5QArBBgjW0BGJH2B9hnFrdMQ92kQmAtSRX-vMKimhahoGBiu2YWGY9nGEmLT8K7GpUbTpT3jaEPCtL-NaRs7A';
     var url = Uri.parse("$baseUrl/addition");
     var response = await http.post(url,
         headers: <String, String>{
@@ -35,8 +35,7 @@ class RaiseRechargeService {
     var response = await http.post(url,
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
-          "Authorization":
-              "Bearer ${partnerTokenFromAdmin ?? 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwYXJ0bmVyQGdtYWlsLmNvbSIsImlhdCI6MTY4NzE0MDkyOCwiZXhwIjoxNzA0NDIwOTI4fQ.y5QArBBgjW0BGJH2B9hnFrdMQ92kQmAtSRX-vMKimhahoGBiu2YWGY9nGEmLT8K7GpUbTpT3jaEPCtL-NaRs7A'}"
+          "Authorization": "Bearer $partnerTokenFromAdmin"
         },
         body: jsonEncode(reduceWallet.toJson()));
     if (response.statusCode == 200) {

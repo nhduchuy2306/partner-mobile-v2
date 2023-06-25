@@ -4,11 +4,13 @@ import 'package:partner_mobile/models/cart_item.dart';
 import 'package:partner_mobile/models/customer_membership.dart';
 import 'package:partner_mobile/models/order_request.dart';
 import 'package:partner_mobile/models/push_notification.dart';
+import 'package:partner_mobile/models/raise_recharge_wallet.dart';
 import 'package:partner_mobile/provider/cart_provider.dart';
 import 'package:partner_mobile/provider/payment_wallet_provider.dart';
 import 'package:partner_mobile/services/customer_membership_service.dart';
 import 'package:partner_mobile/services/order_service.dart';
 import 'package:partner_mobile/services/push_notification_service.dart';
+import 'package:partner_mobile/services/raise_recharge_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -78,8 +80,8 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
           ),
           getDivider(),
           checkoutRow("Payment Wallet",
-              trailingWidget: Consumer<PaymentWalletProvider>(builder:(context, paymentProvider, child)=>
-                SizedBox(
+              trailingWidget: Consumer<PaymentWalletProvider>(
+                builder: (context, paymentProvider, child) => SizedBox(
                   width: 140,
                   child: Text(
                     "[${paymentProvider.selectedPaymentWalletIds.map((e) => e.type).toList().join(", ")}]",
@@ -103,48 +105,59 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
                     title: const Text("Payment Wallet"),
                     content: StatefulBuilder(
                         builder: (BuildContext context, StateSetter setState) {
-                      return Consumer<PaymentWalletProvider>(builder:(context, paymentProvider, child) =>
-                        FutureBuilder<CustomerMemberShip>(
-                            future: customerMembershipFuture,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                final list = snapshot.data!.walletList!;
-                                return ListBody(
-                                  children: list.map((e) => CheckboxListTile(
-                                    title: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(e.type ?? ""),
-                                        Text(
-                                          "\$ ${e.balance?.toStringAsFixed(0) ?? 0}",
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    value: paymentProvider.isSelectedWallet(e),
-                                    onChanged: (value) {
-                                      if (value!) {
-                                        setState(() {
-                                          paymentProvider.addPaymentWalletId(e);
-                                        });
-                                      } else {
-                                        setState(() {
-                                          paymentProvider.removePaymentWalletId(e);
-                                        });
-                                      }
-                                    },
-                                  )).toList(),
-                                );
-                              } else {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-                            }),
+                      return Consumer<PaymentWalletProvider>(
+                        builder: (context, paymentProvider, child) =>
+                            FutureBuilder<CustomerMemberShip>(
+                                future: customerMembershipFuture,
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    final list = snapshot.data!.walletList!;
+                                    return ListBody(
+                                      children: list
+                                          .map((e) => CheckboxListTile(
+                                                title: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(e.type ?? ""),
+                                                    Text(
+                                                      "\$ ${e.balance?.toStringAsFixed(0) ?? 0}",
+                                                      style: const TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                value: paymentProvider
+                                                    .isSelectedWallet(e),
+                                                onChanged: (value) {
+                                                  if (value!) {
+                                                    setState(() {
+                                                      paymentProvider
+                                                          .addPaymentWalletId(
+                                                              e);
+                                                    });
+                                                  } else {
+                                                    setState(() {
+                                                      paymentProvider
+                                                          .removePaymentWalletId(
+                                                              e);
+                                                    });
+                                                  }
+                                                },
+                                              ))
+                                          .toList(),
+                                    );
+                                  } else {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                }),
                       );
                     }),
                   );
@@ -186,16 +199,27 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
                     if (paymentProvider.totalAmount < widget.totalAmount ||
                         paymentProvider.totalAmount == 0) {
                       print("insufficient");
-                      showMessageDialog(
-                          "Insufficient Balance", "Please top up your wallet");
+                      showMessageDialog("Insufficient Balance",
+                          "Your balance is not enough, add more or recharge");
                       return;
                     }
                     final SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     final String? token = prefs.getString('fcmToken');
 
+                    List<int>? listOfWallet = paymentProvider.selectedPaymentWalletIds.map((e) => e.id ?? 0).toList();
+
+                    ReduceWallet reduceWallet = ReduceWallet(
+                      customerId: "1",
+                      amount: widget.totalAmount,
+                      description: "Payment for order",
+                      token: token,
+                      walletIds: listOfWallet,
+                    );
+
                     Future<String> playOrderFuture =
                         placeOrder(cartProvider.cartItems);
+                    await RaiseRechargeService.reduceRequest(reduceWallet);
                     playOrderFuture.then((value) {
                       if (value == "success") {
                         cartProvider.clearCart();

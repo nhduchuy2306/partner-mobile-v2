@@ -166,7 +166,7 @@ class _CustomerWalletState extends State<CustomerWallet> {
                               await RaiseRechargeService.raiseRechargeRequest(
                                   raiseWallet);
 
-                              Future.delayed(const Duration(seconds: 2), () {
+                              Future.delayed(const Duration(seconds: 0), () {
                                 showDialog(
                                     context: context,
                                     builder: (_) {
