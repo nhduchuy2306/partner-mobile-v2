@@ -99,7 +99,7 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
                 context: context,
                 builder: (_) {
                   Future<CustomerMemberShip> customerMembershipFuture =
-                      CustomerMemberShipService.getCustomerMemberShipById("1");
+                      CustomerMemberShipService.getCustomerMemberShipById(userInfo?.uid ??"1");
                   return AlertDialog(
                     scrollable: true,
                     title: const Text("Payment Wallet"),
