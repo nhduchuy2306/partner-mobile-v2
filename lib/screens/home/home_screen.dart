@@ -135,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(
                     height: 15,
                   ),
-                  getHorizontalItemSlider(bestSellingProducts),
+                  getHorizontalItemSliderWithFuture(futureLatestProducts),
                   const SizedBox(
                     height: 15,
                   ),
