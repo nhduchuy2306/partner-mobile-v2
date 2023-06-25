@@ -95,28 +95,29 @@ class _LoginScreenState extends State<LoginScreen> {
                             photoURL: user.photoUrl,
                             uid: user.id,
                             providerId: "");
-                        User? userModel = await UserService.getUserByUsername(
-                            user.id ?? "");
+                        User? userModel =
+                            await UserService.getUserByUsername(user.id ?? "");
                         if (userModel == null) {
                           CustomerInfo customerInfo = CustomerInfo(
-                            customerId: user.id ?? "",
-                            email: user.email,
-                            fullName: user.displayName,
-                            dob: "",
-                            image: user.photoUrl,
-                            phone: ""
-                          );
+                              customerId: user.id ?? "",
+                              email: user.email,
+                              fullName: user.displayName,
+                              dob: "",
+                              image: user.photoUrl,
+                              phone: "");
                           await UserService.register(userInfo);
-                          await CustomerMemberShipService.registerCustomer(customerInfo);
+                          await CustomerMemberShipService.registerCustomer(
+                              customerInfo);
                         }
                       }
                       Future.delayed(const Duration(seconds: 1), () {
-                        Navigator.push(
+                        Navigator.pushAndRemoveUntil(
                             context,
                             PageTransition(
                               type: PageTransitionType.fade,
                               child: const DashBoardScreen(),
-                            ));
+                            ),
+                            (route) => false);
                       });
                     },
                     child: const Row(
