@@ -80,7 +80,7 @@ class ShoppingCartItem extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    "${product?.price?.toStringAsFixed(0)} VND",
+                    "\$ ${product?.price?.toStringAsFixed(0)}",
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(

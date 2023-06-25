@@ -56,7 +56,7 @@ class ItemCardWidget extends StatelessWidget {
                 children: [
                   Center(
                     child: Text(
-                      "${item.price?.toStringAsFixed(0)} VND",
+                      "\$ ${item.price?.toStringAsFixed(0)}",
                       style: const TextStyle(
                         fontSize: 13,
                         letterSpacing: 1,

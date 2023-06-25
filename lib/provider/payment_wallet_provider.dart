@@ -3,7 +3,7 @@ import 'package:partner_mobile/models/customer_membership.dart';
 
 class PaymentWalletProvider extends ChangeNotifier {
 
-  List<Wallet> _selectedPaymentWalletIds = [];
+  final List<Wallet> _selectedPaymentWalletIds = [];
 
   List<Wallet> get selectedPaymentWalletIds => _selectedPaymentWalletIds;
 
@@ -12,9 +12,25 @@ class PaymentWalletProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removePaymentWalletId(Wallet wallet) {
-    _selectedPaymentWalletIds.remove(wallet);
+  bool isSelectedWallet(Wallet wallet) {
+    for (var item in _selectedPaymentWalletIds) {
+      if (item.id == wallet.id) {
+        notifyListeners();
+        return true;
+      }
+    }
     notifyListeners();
+    return false;
+  }
+
+  void removePaymentWalletId(Wallet wallet) {
+    for (var item in _selectedPaymentWalletIds) {
+      if (item.id == wallet.id) {
+        _selectedPaymentWalletIds.remove(item);
+        notifyListeners();
+        return;
+      }
+    }
   }
 
   double get totalAmount {

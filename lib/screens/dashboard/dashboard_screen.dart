@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:partner_mobile/provider/cart_provider.dart';
 import 'package:partner_mobile/screens/cart/cart_screen.dart';
@@ -25,26 +24,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   void initState() {
     super.initState();
     _currentIndex = 0;
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      RemoteNotification notification = message.notification!;
-      AndroidNotification android = message.notification!.android!;
-
-      if (notification != null && android != null) {
-        // showNotificationCustomPopup(context, notification.title!, notification.body!);
-        // showDialog(context: context, builder: (_) => AlertDialog(
-        //   actionsAlignment: MainAxisAlignment.start,
-        //   title: Text(notification.title!),
-        //   content: Text(notification.body!),
-        //   actions: [
-        //     TextButton(
-        //       onPressed: () => Navigator.of(context).pop(),
-        //       child: const Text("OK"),
-        //     )
-        //   ],
-        // ));
-      }
-    });
   }
 
   void showNotificationCustomPopup(BuildContext context, String title, String body) {

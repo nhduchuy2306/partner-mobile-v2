@@ -24,7 +24,7 @@ class CheckoutBottomSheet extends StatefulWidget {
 class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
   late User? user = FirebaseAuth.instance.currentUser;
   late UserInfo? userInfo = user?.providerData[0];
-  late List<int> _selectedPaymentWalletIds;
+  final List<Wallet> _selectedPaymentWalletIds = [];
 
   @override
   void initState() {
@@ -32,7 +32,6 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
     setState(() {
       user = FirebaseAuth.instance.currentUser;
       userInfo = user?.providerData[0];
-      _selectedPaymentWalletIds = [];
     });
   }
 
@@ -43,6 +42,7 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    print("Selected Payment Wallets: $_selectedPaymentWalletIds");
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 25,
@@ -77,73 +77,88 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
             height: 45,
           ),
           getDivider(),
-          checkoutRow("Delivery",
-              trailingText: "Select Method", showArrow: true),
-          getDivider(),
-          checkoutRow("Payment",
-              trailingWidget: const Icon(
-                Icons.payment,
+          checkoutRow("Payment Wallet",
+              trailingWidget: Consumer<PaymentWalletProvider>(builder:(context, paymentProvider, child)=>
+                SizedBox(
+                  width: 140,
+                  child: Text(
+                    "[${paymentProvider.selectedPaymentWalletIds.map((e) => e.type).toList().join(", ")}]",
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: const TextStyle(
+                      fontSize: 9,
+                    ),
+                  ),
+                ),
               ),
               showArrow: true, onTap: () {
             showDialog(
-              context: context,
-              builder: (context) {
-                Future<CustomerMemberShip> customerMembershipFuture =
-                    CustomerMemberShipService.getCustomerMemberShipById(userInfo?.uid ?? "1");
-                return AlertDialog(
-                  title: const Text("Payment Wallet"),
-                  content: SingleChildScrollView(
-                    child: Consumer<PaymentWalletProvider>(
-                        builder: (context, paymentWalletProvider, child) {
-                      return FutureBuilder<CustomerMemberShip>(
-                        future: customerMembershipFuture,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return ListBody(
-                              children: snapshot.data!.walletList!.map((item) {
-                                return CheckboxListTile(
-                                    title: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text('${item.type}'),
-                                        Text(
-                                            '\$ ${item.balance!.toStringAsFixed(0)}')
-                                      ],
-                                    ),
-                                    value: paymentWalletProvider
-                                        .selectedPaymentWalletIds
-                                        .contains(item),
-                                    onChanged: (isSelected) {
-                                      if (isSelected!) {
-                                        paymentWalletProvider
-                                            .addPaymentWalletId(item);
-                                      } else {
-                                        paymentWalletProvider
-                                            .removePaymentWalletId(item);
-                                      }
+                useSafeArea: true,
+                context: context,
+                builder: (_) {
+                  Future<CustomerMemberShip> customerMembershipFuture =
+                      CustomerMemberShipService.getCustomerMemberShipById("1");
+                  return AlertDialog(
+                    scrollable: true,
+                    title: const Text("Payment Wallet"),
+                    content: StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState) {
+                      return Consumer<PaymentWalletProvider>(builder:(context, paymentProvider, child) =>
+                        FutureBuilder<CustomerMemberShip>(
+                            future: customerMembershipFuture,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: snapshot.data!.walletList?.length,
+                                    itemBuilder: (context, index) {
+                                      final Wallet wallet =
+                                          snapshot.data!.walletList![index];
+                                      return CheckboxListTile(
+                                        title: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(snapshot
+                                                    .data!.walletList?[index].type ??
+                                                ""),
+                                            Text(
+                                              "\$ ${snapshot.data!.walletList?[index].balance?.toStringAsFixed(0) ?? 0}",
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        value: paymentProvider.isSelectedWallet(wallet),
+                                        onChanged: (value) {
+                                          if (value!) {
+                                            setState(() {
+                                              paymentProvider.addPaymentWalletId(wallet);
+                                            });
+                                          } else {
+                                            setState(() {
+                                              paymentProvider.removePaymentWalletId(wallet);
+                                            });
+                                          }
+                                        },
+                                      );
                                     });
-                              }).toList(),
-                            );
-                          } else if (snapshot.hasError) {
-                            return const Text("Error");
-                          }
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        },
+                              } else {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                            }),
                       );
                     }),
-                  ),
-                );
-              },
-            );
+                  );
+                });
           }),
           getDivider(),
           checkoutRow("Total Cost",
-              trailingText: "${widget.totalAmount.toStringAsFixed(0)} VND"),
+              trailingText: "\$ ${widget.totalAmount.toStringAsFixed(0)}"),
           getDivider(),
           const SizedBox(
             height: 30,
@@ -155,65 +170,88 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
             ),
             child:
                 Consumer<CartProvider>(builder: (context, cartProvider, child) {
-              return GestureDetector(
-                onTap: () async {
-                  if (userInfo == null) {
-                    showErrorDialog();
-                  }
-
-                  final SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                  final String? token = prefs.getString('fcmToken');
-
-                  Future<String> playOrderFuture =
-                      placeOrder(cartProvider.cartItems);
-                  playOrderFuture.then((value) {
-                    if (value == "success") {
-                      cartProvider.clearCart();
-
-                      Data data = Data(
-                          additionalProp1: "New Order",
-                          additionalProp2: "You have a new order",
-                          additionalProp3: "FLUTTER_NOTIFICATION_CLICK");
-
-                      PushNotification pushNotification = PushNotification(
-                          subject: "New Order",
-                          content: "You have a new order",
-                          data: data,
-                          token: token);
-
-                      Future<String> pushNotificationService =
-                          PushNotificationService.createNotification(
-                              pushNotification);
-
-                      pushNotificationService.then((value) {
-                        print(value);
-                      });
-
-                      Navigator.pop(context);
-                      showOrderPlacedDialog();
-                    } else {
-                      Navigator.pop(context);
-                      showOrderFailedDialog();
+              return Consumer<PaymentWalletProvider>(
+                builder: (context, paymentProvider, child) => GestureDetector(
+                  onTap: () async {
+                    if (userInfo == null) {
+                      showMessageDialog(
+                          "Login Required", "Please login to place order");
+                      return;
                     }
-                  });
-                },
-                child: Container(
-                  width: double.maxFinite,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 20,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFC6A57),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "Place Order",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                    if (widget.totalAmount == 0) {
+                      showMessageDialog(
+                          "Empty Cart", "Please add items to cart");
+                      return;
+                    }
+                    if (paymentProvider.selectedPaymentWalletIds.isEmpty) {
+                      print("empty");
+                      showMessageDialog("No Payment Wallet Selected",
+                          "Please select a payment wallet");
+                      return;
+                    }
+                    if (paymentProvider.totalAmount < widget.totalAmount ||
+                        paymentProvider.totalAmount == 0) {
+                      print("insufficient");
+                      showMessageDialog(
+                          "Insufficient Balance", "Please top up your wallet");
+                      return;
+                    }
+                    final SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    final String? token = prefs.getString('fcmToken');
+
+                    Future<String> playOrderFuture =
+                        placeOrder(cartProvider.cartItems);
+                    playOrderFuture.then((value) {
+                      if (value == "success") {
+                        cartProvider.clearCart();
+
+                        Data data = Data(
+                            additionalProp1: "New Order",
+                            additionalProp2: "You have a new order",
+                            additionalProp3: "FLUTTER_NOTIFICATION_CLICK");
+
+                        PushNotification pushNotification = PushNotification(
+                            subject: "New Order",
+                            content: "You have a new order",
+                            data: data,
+                            token: token);
+
+                        Future<String> pushNotificationService =
+                            PushNotificationService.createNotification(
+                                pushNotification);
+
+                        pushNotificationService.then((value) {
+                          print(value);
+                        });
+
+                        Navigator.pop(context);
+                        showMessageDialog("Place Order Success",
+                            "Your order has been placed successfully.");
+                      } else {
+                        Navigator.pop(context);
+                        showMessageDialog("Place Order Failed",
+                            "Your order has not been placed successfully.");
+                      }
+                    });
+                  },
+                  child: Container(
+                    width: double.maxFinite,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 20,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFC6A57),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Place Order \$${widget.totalAmount.toStringAsFixed(0)}",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
@@ -274,7 +312,7 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
       },
       child: Container(
         margin: const EdgeInsets.symmetric(
-          vertical: 15,
+          vertical: 10,
         ),
         child: Row(
           children: [
@@ -285,13 +323,13 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const Spacer(),
+            Spacer(),
             trailingText == null
                 ? (trailingWidget ?? Container())
                 : Text(
                     trailingText,
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF7C7C7C),
                     ),
@@ -337,51 +375,13 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
     return response;
   }
 
-  void showErrorDialog() {
+  void showMessageDialog(String title, String content) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text("Error"),
-            content: const Text("Please login before placing order"),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text("OK"),
-              )
-            ],
-          );
-        });
-  }
-
-  void showOrderPlacedDialog() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Order Placed"),
-            content: const Text("Your order has been placed successfully"),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text("OK"),
-              )
-            ],
-          );
-        });
-  }
-
-  void showOrderFailedDialog() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Order Failed"),
-            content: const Text("Your order has been failed"),
+            title: Text(title),
+            content: Text(content),
             actions: [
               TextButton(
                 onPressed: () {
