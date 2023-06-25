@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:partner_mobile/models/order.dart';
 import 'package:partner_mobile/services/order_service.dart';
+import 'package:partner_mobile/styles/app_colors.dart';
 
 class OrderHistoryScreen extends StatefulWidget {
   OrderHistoryScreen({super.key, this.userInfo});
@@ -27,6 +28,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Order History'),
+        backgroundColor: AppColors.primaryColor,
         centerTitle: true,
       ),
       body: RefreshIndicator(

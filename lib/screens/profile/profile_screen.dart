@@ -6,6 +6,7 @@ import 'package:partner_mobile/common_widgets/app_button.dart';
 import 'package:partner_mobile/models/customer_membership.dart';
 import 'package:partner_mobile/provider/google_signin_provider.dart';
 import 'package:partner_mobile/screens/login_screen.dart';
+import 'package:partner_mobile/screens/profile/customer_wallet.dart';
 import 'package:partner_mobile/screens/profile/order_history_screen.dart';
 import 'package:partner_mobile/services/customer_membership_service.dart';
 import 'package:partner_mobile/styles/app_colors.dart';
@@ -29,8 +30,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       user = FirebaseAuth.instance.currentUser;
       userInfo = user?.providerData[0];
-      customerMemberShips =
-          CustomerMemberShipService.getCustomerMemberShipById(userInfo?.uid ?? "1");
+      // customerMemberShips = CustomerMemberShipService.getCustomerMemberShipById(
+      //     userInfo?.uid ?? "1");
+      customerMemberShips = CustomerMemberShipService.getCustomerMemberShipById("1");
     });
   }
 
@@ -50,7 +52,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const Divider(
               thickness: 1,
             ),
-            settingBar(userInfo),
+            settingBar(
+                title: const Text(
+                  "Wallet",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                subtitle: const Text(
+                  "My Wallet",
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xff7C7C7C),
+                      fontWeight: FontWeight.normal),
+                ),
+                leading: const Icon(
+                  Icons.wallet,
+                  color: Colors.black,
+                  size: 30,
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      type: PageTransitionType.rightToLeft,
+                      child: CustomerWallet(
+                          userInfo: userInfo,
+                          customerMemberShips: customerMemberShips),
+                    ),
+                  );
+                }),
+            const Divider(
+              thickness: 1,
+            ),
+            settingBar(
+                title: const Text(
+                  "Order History",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                leading: const Icon(
+                  Icons.history,
+                  color: Colors.black,
+                  size: 30,
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      type: PageTransitionType.rightToLeft,
+                      child: OrderHistoryScreen(userInfo: userInfo),
+                    ),
+                  );
+                }),
             const Divider(
               thickness: 1,
             ),
@@ -64,44 +121,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget settingBar(userInfo) {
+  Widget settingBar(
+      {Function()? onTap,
+      Widget? leading,
+      Widget? title,
+      Widget? subtitle,
+      Widget? trailing}) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          PageTransition(
-            type: PageTransitionType.rightToLeft,
-            child: OrderHistoryScreen(userInfo: userInfo),
-          ),
-        );
-      },
+      onTap: onTap,
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20),
-        child: const ListTile(
-          leading: Icon(
-            Icons.history,
-            color: Colors.black,
-            size: 30,
-          ),
-          title: Text(
-            "Order History",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          subtitle: Text(
-            "My Order History",
-            style: TextStyle(
-                fontSize: 16,
+        child: ListTile(
+          leading: leading ??
+              const Icon(
+                Icons.history,
+                color: Colors.black,
+                size: 30,
+              ),
+          title: title ??
+              const Text(
+                "Order History",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+          subtitle: subtitle ??
+              const Text(
+                "My Order History",
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Color(0xff7C7C7C),
+                    fontWeight: FontWeight.normal),
+              ),
+          trailing: trailing ??
+              const Icon(
+                Icons.arrow_forward_ios,
                 color: Color(0xff7C7C7C),
-                fontWeight: FontWeight.normal),
-          ),
-          trailing: Icon(
-            Icons.arrow_forward_ios,
-            color: Color(0xff7C7C7C),
-            size: 20,
-          ),
+                size: 20,
+              ),
         ),
       ),
     );

@@ -15,11 +15,9 @@ class PaymentWalletProvider extends ChangeNotifier {
   bool isSelectedWallet(Wallet wallet) {
     for (var item in _selectedPaymentWalletIds) {
       if (item.id == wallet.id) {
-        notifyListeners();
         return true;
       }
     }
-    notifyListeners();
     return false;
   }
 

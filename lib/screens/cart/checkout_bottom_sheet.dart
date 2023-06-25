@@ -108,43 +108,37 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
                             future: customerMembershipFuture,
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
-                                return ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: snapshot.data!.walletList?.length,
-                                    itemBuilder: (context, index) {
-                                      final Wallet wallet =
-                                          snapshot.data!.walletList![index];
-                                      return CheckboxListTile(
-                                        title: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(snapshot
-                                                    .data!.walletList?[index].type ??
-                                                ""),
-                                            Text(
-                                              "\$ ${snapshot.data!.walletList?[index].balance?.toStringAsFixed(0) ?? 0}",
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ],
+                                final list = snapshot.data!.walletList!;
+                                return ListBody(
+                                  children: list.map((e) => CheckboxListTile(
+                                    title: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(e.type ?? ""),
+                                        Text(
+                                          "\$ ${e.balance?.toStringAsFixed(0) ?? 0}",
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
-                                        value: paymentProvider.isSelectedWallet(wallet),
-                                        onChanged: (value) {
-                                          if (value!) {
-                                            setState(() {
-                                              paymentProvider.addPaymentWalletId(wallet);
-                                            });
-                                          } else {
-                                            setState(() {
-                                              paymentProvider.removePaymentWalletId(wallet);
-                                            });
-                                          }
-                                        },
-                                      );
-                                    });
+                                      ],
+                                    ),
+                                    value: paymentProvider.isSelectedWallet(e),
+                                    onChanged: (value) {
+                                      if (value!) {
+                                        setState(() {
+                                          paymentProvider.addPaymentWalletId(e);
+                                        });
+                                      } else {
+                                        setState(() {
+                                          paymentProvider.removePaymentWalletId(e);
+                                        });
+                                      }
+                                    },
+                                  )).toList(),
+                                );
                               } else {
                                 return const Center(
                                   child: CircularProgressIndicator(),

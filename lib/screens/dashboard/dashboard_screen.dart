@@ -26,24 +26,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     _currentIndex = 0;
   }
 
-  void showNotificationCustomPopup(BuildContext context, String title, String body) {
-    showDialog(
-      useSafeArea: true,
-      context: context,
-      builder: (_) => AlertDialog(
-        actionsAlignment: MainAxisAlignment.start,
-        title: Text(title),
-        content: Text(body),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text("OK"),
-          )
-        ],
-      ),
-    );
-  }
-
   List<Widget> getScreens() {
     return [
       HomeScreen(
