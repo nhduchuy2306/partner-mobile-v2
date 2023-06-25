@@ -2,9 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:partner_mobile/models/customer_membership.dart';
 import 'package:partner_mobile/models/raise_recharge_wallet.dart';
+import 'package:partner_mobile/provider/payment_wallet_provider.dart';
 import 'package:partner_mobile/screens/widgets/loading_screen_widget.dart';
 import 'package:partner_mobile/services/raise_recharge_service.dart';
 import 'package:partner_mobile/styles/app_colors.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomerWallet extends StatefulWidget {
@@ -151,33 +153,37 @@ class _CustomerWalletState extends State<CustomerWallet> {
                               Navigator.pop(context);
                             },
                             child: const Text('Cancel')),
-                        TextButton(
-                            onPressed: () async {
-                              final SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                              final String? fcmToken =
-                                  prefs.getString('fcmToken');
-                              RaiseWallet raiseWallet = RaiseWallet(
-                                  customerId: widget.userInfo!.uid,
-                                  amount: double.parse(_amountController.text),
-                                  description: 'Recharge wallet',
-                                  token: fcmToken,
-                                  walletId: _selectedWallet);
-                              await RaiseRechargeService.raiseRechargeRequest(
-                                  raiseWallet);
+                        Consumer<PaymentWalletProvider>(builder:(context, paymentProvider, child){
+                          return TextButton(
+                              onPressed: () async {
+                                final SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                                final String? fcmToken =
+                                prefs.getString('fcmToken');
+                                RaiseWallet raiseWallet = RaiseWallet(
+                                    customerId: widget.userInfo!.uid,
+                                    amount: double.parse(_amountController.text),
+                                    description: 'Recharge wallet',
+                                    token: fcmToken,
+                                    walletId: _selectedWallet);
+                                await RaiseRechargeService.raiseRechargeRequest(
+                                    raiseWallet);
 
-                              Future.delayed(const Duration(seconds: 0), () {
-                                showDialog(
-                                    context: context,
-                                    builder: (_) {
-                                      return const CircularProgressIndicator();
-                                    });
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (_) =>
-                                        const LoadingScreenWidget()));
-                              });
-                            },
-                            child: const Text('Recharge')),
+                                paymentProvider.clear();
+
+                                Future.delayed(const Duration(seconds: 0), () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) {
+                                        return const CircularProgressIndicator();
+                                      });
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (_) =>
+                                      const LoadingScreenWidget()));
+                                });
+                              },
+                              child: const Text('Recharge'));
+                        })
                       ],
                     );
                   });

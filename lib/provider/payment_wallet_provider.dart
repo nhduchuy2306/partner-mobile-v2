@@ -38,4 +38,9 @@ class PaymentWalletProvider extends ChangeNotifier {
     }
     return total;
   }
+
+  void clear() {
+    _selectedPaymentWalletIds.clear();
+    notifyListeners();
+  }
 }
