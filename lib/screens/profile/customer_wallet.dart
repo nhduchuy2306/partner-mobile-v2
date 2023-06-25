@@ -158,7 +158,7 @@ class _CustomerWalletState extends State<CustomerWallet> {
                               final String? fcmToken =
                                   prefs.getString('fcmToken');
                               RaiseWallet raiseWallet = RaiseWallet(
-                                  customerId: "1",
+                                  customerId: widget.userInfo!.uid,
                                   amount: double.parse(_amountController.text),
                                   description: 'Recharge wallet',
                                   token: fcmToken,

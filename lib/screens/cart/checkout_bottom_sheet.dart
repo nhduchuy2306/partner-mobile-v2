@@ -210,7 +210,7 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
                     List<int>? listOfWallet = paymentProvider.selectedPaymentWalletIds.map((e) => e.id ?? 0).toList();
 
                     ReduceWallet reduceWallet = ReduceWallet(
-                      customerId: "1",
+                      customerId: userInfo?.uid ?? "1",
                       amount: widget.totalAmount,
                       description: "Payment for order",
                       token: token,

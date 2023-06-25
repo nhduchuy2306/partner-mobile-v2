@@ -61,7 +61,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                         title: Text(snapshot.data?[index].date ?? ""),
                         subtitle: Text(widget.userInfo?.displayName ?? ""),
                         trailing: Text(
-                            "${snapshot.data?[index].total?.toStringAsFixed(0)} VND" ??
+                            "\$${snapshot.data?[index].total?.toStringAsFixed(0)}" ??
                                 ""),
                       ),
                     );
