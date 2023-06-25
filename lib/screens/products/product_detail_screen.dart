@@ -75,7 +75,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         width: 20,
                       ),
                       Text(
-                        "${getTotalPrice().toStringAsFixed(0)} VNĐ",
+                        "\$${getTotalPrice().toStringAsFixed(0)}",
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

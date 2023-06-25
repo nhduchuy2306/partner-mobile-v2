@@ -14,7 +14,7 @@ class CustomerMemberShipService {
     String? partnerTokenFromAdmin = prefs.getString('partnerTokenFromAdmin');
     var url = Uri.parse("$baseUrl/members/information?customerId=$id");
     var response = await http.get(url, headers: {
-      "Accept": "application/json",
+      'Content-Type': 'application/json; charset=UTF-8',
       "Authorization":
           "Bearer ${partnerTokenFromAdmin ?? 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwYXJ0bmVyQGdtYWlsLmNvbSIsImlhdCI6MTY4NzE0MDkyOCwiZXhwIjoxNzA0NDIwOTI4fQ.y5QArBBgjW0BGJH2B9hnFrdMQ92kQmAtSRX-vMKimhahoGBiu2YWGY9nGEmLT8K7GpUbTpT3jaEPCtL-NaRs7A'}"
     });

@@ -1,6 +1,6 @@
 class RaiseWallet {
   String? customerId;
-  int? amount;
+  double? amount;
   String? description;
   String? token;
   int? walletId;
@@ -33,7 +33,7 @@ class RaiseWallet {
 
 class ReduceWallet {
   String? customerId;
-  int? amount;
+  double? amount;
   String? description;
   String? token;
   List<int>? walletIds;
