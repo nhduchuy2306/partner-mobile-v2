@@ -373,7 +373,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           MediaQuery.of(context).size.width / 5,
                                       child: LinearProgressIndicator(
                                         value: ((snapshot.data?.membership
-                                                    ?.totalReceipt ??
+                                                    ?.totalExpenditure ??
                                                 1) /
                                             (snapshot.data?.nextLevel
                                                     ?.condition ??
@@ -386,7 +386,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                     ),
                                     Text(
-                                      "${snapshot.data?.membership?.totalReceipt?.toStringAsFixed(0)}/"
+                                      "${snapshot.data?.membership?.totalExpenditure?.toStringAsFixed(0)}/"
                                       "${snapshot.data?.nextLevel?.condition?.toStringAsFixed(0)}",
                                       style: const TextStyle(
                                         fontSize: 10,
