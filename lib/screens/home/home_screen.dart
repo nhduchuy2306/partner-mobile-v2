@@ -8,6 +8,7 @@ import 'package:partner_mobile/models/product_description.dart';
 import 'package:partner_mobile/models/product_picture.dart';
 import 'package:partner_mobile/models/title_enum.dart';
 import 'package:partner_mobile/screens/home/home_banner.dart';
+import 'package:partner_mobile/screens/notification/notification_screen.dart';
 import 'package:partner_mobile/screens/products/product_detail_screen.dart';
 import 'package:partner_mobile/screens/widgets/feature_card_widget.dart';
 import 'package:partner_mobile/screens/widgets/item_card_widget.dart';
@@ -88,6 +89,42 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: const Text(
+            "Gadget Zone",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    type: PageTransitionType.rightToLeft,
+                    child: const NotificationScreen(),
+                  ),
+                );
+              },
+              icon: const Badge(
+                label: Text(
+                  "3",
+                  style: TextStyle(color: Colors.white),
+                ),
+                child: Icon(
+                  Icons.notifications,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ],
+        ),
         body: RefreshIndicator(
           onRefresh: refresh,
           child: SingleChildScrollView(
@@ -119,8 +156,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (latestProducts.isNotEmpty)
                     Column(
                       children: [
-                        padded(
-                            subTitle("Latest Product", TitleEnum.latestProduct)),
+                        padded(subTitle(
+                            "Latest Product", TitleEnum.latestProduct)),
                         getHorizontalItemSliderWithFuture(futureLatestProducts),
                       ],
                     ),

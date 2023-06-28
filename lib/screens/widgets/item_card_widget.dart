@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:partner_mobile/models/product.dart';
 import 'package:partner_mobile/provider/cart_provider.dart';
+import 'package:partner_mobile/provider/favorite_provider.dart';
 import 'package:partner_mobile/styles/app_colors.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ItemCardWidget extends StatelessWidget {
   const ItemCardWidget(
@@ -67,28 +69,48 @@ class ItemCardWidget extends StatelessWidget {
                   const SizedBox(
                     height: 15,
                   ),
-                  Consumer<CartProvider>(
-                    builder: (context, cartProvider, child) {
-                      return GestureDetector(
-                        onTap: () {
-                          cartProvider.addToCart(item, 1);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Add to cart successfully!'),
-                              duration: Duration(seconds: 1),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Consumer<CartProvider>(
+                        builder: (context, cartProvider, child) {
+                          return GestureDetector(
+                            onTap: () {
+                              cartProvider.addToCart(item, 1);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Add to cart successfully!'),
+                                  duration: Duration(seconds: 1),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                  left: 13, right: 13, top: 5, bottom: 5),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryColor,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: addWidget(),
                             ),
                           );
                         },
-                        child: Container(
-                          padding: const EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryColor,
-                            borderRadius: BorderRadius.circular(4),
+                      ),
+                      Consumer<FavoriteProvider>(builder:(context, favoriteProvider, child){
+                        return IconButton(
+                          icon: Icon(
+                            Icons.favorite,
+                            color: favoriteProvider.isFavorite(item)
+                                ? Colors.red
+                                : Colors.grey,
+                            size: 20,
                           ),
-                          child: addWidget(),
-                        ),
-                      );
-                    },
+                          onPressed: ()  {
+                            favoriteProvider.addFavorite(item);
+                          },
+                        );
+                      })
+                    ],
                   ),
                 ],
               ),

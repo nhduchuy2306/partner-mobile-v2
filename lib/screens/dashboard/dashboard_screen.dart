@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:partner_mobile/provider/cart_provider.dart';
 import 'package:partner_mobile/screens/cart/cart_screen.dart';
 import 'package:partner_mobile/screens/home/home_screen.dart';
 import 'package:partner_mobile/screens/notification/notification_screen.dart';
 import 'package:partner_mobile/screens/profile/profile_screen.dart';
 import 'package:partner_mobile/screens/shop/shop_screen.dart';
+import 'package:partner_mobile/screens/wishlist/wishlist_screen.dart';
 import 'package:partner_mobile/styles/app_colors.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +37,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       ),
       const ShopScreen(),
       const CartScreen(),
-      const NotificationScreen(),
+      const WishlistScreen(),
       const ProfileScreen(),
     ];
   }
@@ -80,8 +82,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         label: "Cart",
       ),
       const BottomNavigationBarItem(
-        icon: Icon(Icons.notifications),
-        label: "Notification",
+        icon: Icon(Icons.favorite),
+        label: "Wishlist",
       ),
       const BottomNavigationBarItem(
         icon: Icon(Icons.person),

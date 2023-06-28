@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:partner_mobile/provider/favorite_provider.dart';
 import 'package:partner_mobile/provider/firebase_message_provider.dart';
 import 'package:partner_mobile/provider/cart_provider.dart';
 import 'package:partner_mobile/provider/google_signin_provider.dart';
@@ -21,11 +22,13 @@ void main() async {
 
   print('FCM Token: ${prefs.getString('fcmToken')}');
   print('Token Admin: ${prefs.getString('partnerTokenFromAdmin')}');
+  print('Wishlist: ${prefs.getString('favoriteList')}');
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => CartProvider()),
     ChangeNotifierProvider(create: (_) => GoogleSignInProvider()),
     ChangeNotifierProvider(create: (_) => PaymentWalletProvider()),
+    ChangeNotifierProvider(create: (_) => FavoriteProvider())
   ], child: const MainApp()));
 }
 

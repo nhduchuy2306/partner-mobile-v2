@@ -48,7 +48,7 @@ class _ShopScreenState extends State<ShopScreen> {
       _page += 1;
       try {
         final listProducts =
-            await ProductService.getAllProductPagination(_page);
+            await ProductService.getAllProductPagination(_page,8);
         if (listProducts.isEmpty) {
           setState(() {
             _hasNextPage = false;
@@ -75,7 +75,7 @@ class _ShopScreenState extends State<ShopScreen> {
     });
 
     try {
-      final listProducts = await ProductService.getAllProductPagination(_page);
+      final listProducts = await ProductService.getAllProductPagination(_page,8);
       if (listProducts.isEmpty) {
         setState(() {
           _hasNextPage = false;
@@ -121,24 +121,17 @@ class _ShopScreenState extends State<ShopScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Container(
-          margin: const EdgeInsets.only(left: 45),
-          child: const Center(
-            child: Text(
-              "Happy Gear",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+        title: const Text(
+          "Gadget Zone",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
-        automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
         actions: [
           IconButton(
             onPressed: () {
@@ -154,7 +147,7 @@ class _ShopScreenState extends State<ShopScreen> {
                 ),
               );
             },
-            icon: const Icon(Icons.filter_list),
+            icon: const Icon(Icons.filter_list, color: Colors.black),
           ),
         ],
       ),
