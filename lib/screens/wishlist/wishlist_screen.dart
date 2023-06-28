@@ -20,8 +20,8 @@ class _WishlistScreenState extends State<WishlistScreen> {
           "Wishlist",
           style: TextStyle(
             color: Colors.black,
+            fontSize: 24,
             fontWeight: FontWeight.bold,
-            fontSize: 20,
           ),
         ),
         backgroundColor: Colors.transparent,

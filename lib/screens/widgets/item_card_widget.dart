@@ -86,7 +86,7 @@ class ItemCardWidget extends StatelessWidget {
                             },
                             child: Container(
                               padding: const EdgeInsets.only(
-                                  left: 13, right: 13, top: 5, bottom: 5),
+                                  left: 10, right: 10, top: 5, bottom: 5),
                               decoration: BoxDecoration(
                                 color: AppColors.primaryColor,
                                 borderRadius: BorderRadius.circular(4),
@@ -141,7 +141,7 @@ class ItemCardWidget extends StatelessWidget {
           "Add To Cart",
           style: TextStyle(
             color: Colors.white,
-            fontSize: 12,
+            fontSize: 10,
             fontWeight: FontWeight.bold,
           ),
         ),

@@ -125,7 +125,7 @@ class _ShopScreenState extends State<ShopScreen> {
           "Gadget Zone",
           style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
         ),
