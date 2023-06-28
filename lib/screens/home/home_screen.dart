@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                   context,
                   PageTransition(
-                    type: PageTransitionType.rightToLeft,
+                    type: PageTransitionType.bottomToTop,
                     child: const NotificationScreen(),
                   ),
                 );
