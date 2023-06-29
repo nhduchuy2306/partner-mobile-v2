@@ -7,7 +7,8 @@ import 'package:partner_mobile/models/partner_token.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomerMemberShipService {
-  static String baseUrl = "https://swd-back-end.azurewebsites.net/partner/api";
+  // static String baseUrl = "https://swd-back-end.azurewebsites.net/partner/api";
+  static String baseUrl = "https://my-happygear.azurewebsites.net/happygear/partner/api";
 
   static Future<CustomerMemberShip> getCustomerMemberShipById(String id) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -49,7 +50,8 @@ class CustomerMemberShipService {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           "Authorization":
-              "Bearer ${partnerTokenFromAdmin ?? 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwYXJ0bmVyQGdtYWlsLmNvbSIsImlhdCI6MTY4NzE0MDkyOCwiZXhwIjoxNzA0NDIwOTI4fQ.y5QArBBgjW0BGJH2B9hnFrdMQ92kQmAtSRX-vMKimhahoGBiu2YWGY9nGEmLT8K7GpUbTpT3jaEPCtL-NaRs7A'}"
+              "Bearer ${partnerTokenFromAdmin ??
+                  'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwYXJ0bmVyQGdtYWlsLmNvbSIsImlhdCI6MTY4NzE0MDkyOCwiZXhwIjoxNzA0NDIwOTI4fQ.y5QArBBgjW0BGJH2B9hnFrdMQ92kQmAtSRX-vMKimhahoGBiu2YWGY9nGEmLT8K7GpUbTpT3jaEPCtL-NaRs7A'}"
         },
         body: jsonEncode(customerInfo.toJson()));
     if (response.statusCode == 200) {

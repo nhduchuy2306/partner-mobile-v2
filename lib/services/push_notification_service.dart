@@ -7,7 +7,7 @@ class PushNotificationService {
   static String baseUrl = "https://my-happygear.azurewebsites.net/happygear/api";
 
   static Future<String> createNotification(PushNotification pushNotification) async {
-    var response = await http.post(Uri.parse('$baseUrl/notification/send-notification'),
+    var response = await http.post(Uri.parse('$baseUrl/notification'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

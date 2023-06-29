@@ -9,7 +9,7 @@ class OrderService {
       "https://my-happygear.azurewebsites.net/happygear/api";
 
   static Future<String> createOrder(OrderRequest orderRequest) async {
-    var response = await http.post(Uri.parse('$baseUrl/orders/create'),
+    var response = await http.post(Uri.parse('$baseUrl/orders'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

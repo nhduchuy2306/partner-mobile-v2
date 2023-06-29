@@ -10,7 +10,7 @@ class ProductPictureService {
   static Future<List<ProductPicture>> getAllPictureForProductById(
       int productId) async {
     var response =
-        await http.get(Uri.parse('$baseUrl/pictures/product/$productId'));
+        await http.get(Uri.parse('$baseUrl/products/$productId/pictures'));
     List<ProductPicture> productPictures = [];
     if (response.statusCode == 200) {
       var productPicturesJson = json.decode(utf8.decode(response.bodyBytes));
