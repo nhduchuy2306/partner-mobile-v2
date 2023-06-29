@@ -42,8 +42,9 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                   child: ListTile(
                     title: Text(snapshot.data?[index].partnerName ?? ""),
                     subtitle: Text(snapshot.data?[index].description ?? ""),
-                    trailing:
-                        Text('\$${snapshot.data?[index].amount?.toStringAsFixed(0)}' ?? ""),
+                    trailing: Text(
+                        '\$${snapshot.data?[index].amount?.toStringAsFixed(0)}' ??
+                            ""),
                   ),
                 );
               },
