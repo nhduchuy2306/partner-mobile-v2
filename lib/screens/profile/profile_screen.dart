@@ -27,12 +27,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      user = FirebaseAuth.instance.currentUser;
-      userInfo = user?.providerData[0];
-      customerMemberShips = CustomerMemberShipService.getCustomerMemberShipById(
-          userInfo?.uid ?? "1");
-    });
+    user = FirebaseAuth.instance.currentUser;
+    userInfo = user?.providerData[0];
+    customerMemberShips = CustomerMemberShipService.getCustomerMemberShipById(
+        userInfo?.uid ?? "1");
   }
 
   @override
@@ -80,7 +78,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           userInfo: userInfo,
                           customerMemberShips: customerMemberShips),
                     ),
-                  );
+                  ).then((value) {
+                    setState(() {
+                      customerMemberShips =
+                          CustomerMemberShipService.getCustomerMemberShipById(
+                              userInfo?.uid ?? "1");
+                    });
+                  });
                 }),
             const Divider(
               thickness: 1,

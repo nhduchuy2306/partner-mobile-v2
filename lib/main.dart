@@ -22,7 +22,7 @@ void main() async {
 
   print('FCM Token: ${prefs.getString('fcmToken')}');
   print('Token Admin: ${prefs.getString('partnerTokenFromAdmin')}');
-  print('Wishlist: ${prefs.getString('favoriteList')}');
+  print("partnerTokenFromAdmin: ${prefs.getString('partnerTokenFromAdmin')}");
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => CartProvider()),
