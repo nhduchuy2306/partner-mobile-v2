@@ -8,6 +8,7 @@ import 'package:partner_mobile/provider/google_signin_provider.dart';
 import 'package:partner_mobile/screens/login_screen.dart';
 import 'package:partner_mobile/screens/profile/customer_wallet.dart';
 import 'package:partner_mobile/screens/profile/order_history_screen.dart';
+import 'package:partner_mobile/screens/profile/transaction_history.dart';
 import 'package:partner_mobile/services/customer_membership_service.dart';
 import 'package:partner_mobile/styles/app_colors.dart';
 
@@ -108,6 +109,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     PageTransition(
                       type: PageTransitionType.rightToLeft,
                       child: OrderHistoryScreen(userInfo: userInfo),
+                    ),
+                  );
+                }),
+            const Divider(
+              thickness: 1,
+            ),
+            settingBar(
+                title: const Text(
+                  "Transaction History",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                subtitle: const Text(
+                  "My Transaction History",
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xff7C7C7C),
+                      fontWeight: FontWeight.normal),
+                ),
+                leading: const Icon(
+                  Icons.feed_outlined,
+                  color: Colors.black,
+                  size: 30,
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      type: PageTransitionType.rightToLeft,
+                      child: TransactionHistory(userInfo: userInfo),
                     ),
                   );
                 }),
