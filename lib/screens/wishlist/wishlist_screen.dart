@@ -46,55 +46,58 @@ class _WishlistScreenState extends State<WishlistScreen> {
         elevation: 0.0,
         centerTitle: true,
       ),
-      body: ListView.builder(
-        itemCount: favoriteList.length,
-        itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: ProductDetailScreen(
-                    product: favoriteList[index],
-                    productPictures:
-                        getProductPicture(favoriteList[index].productId!),
-                    productDescription: getProductDescriptionById(
-                        favoriteList[index].productId!),
-                  ),
-                  type: PageTransitionType.bottomToTop,
-                ),
-              );
-            },
-            child: Card(
-              child: ListTile(
-                leading: Image.network(
-                  favoriteList[index].picture!,
-                  width: 100,
-                  height: 100,
-                ),
-                title: Text(favoriteList[index].productName!),
-                subtitle:
-                    Text('\$${favoriteList[index].price!.toStringAsFixed(0)}'),
-                trailing: Consumer<FavoriteProvider>(
-                    builder: (context, favoriteProvider, child) {
-                  return IconButton(
-                    icon: Icon(
-                      Icons.favorite,
-                      color: favoriteProvider.isFavorite(favoriteList[index])
-                          ? Colors.red
-                          : Colors.grey,
-                      size: 20,
+      body: favoriteList.isEmpty
+          ? const Center(child: Text('No Favorite Product'))
+          : ListView.builder(
+              itemCount: favoriteList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        child: ProductDetailScreen(
+                          product: favoriteList[index],
+                          productPictures:
+                              getProductPicture(favoriteList[index].productId!),
+                          productDescription: getProductDescriptionById(
+                              favoriteList[index].productId!),
+                        ),
+                        type: PageTransitionType.bottomToTop,
+                      ),
+                    );
+                  },
+                  child: Card(
+                    child: ListTile(
+                      leading: Image.network(
+                        favoriteList[index].picture!,
+                        width: 100,
+                        height: 100,
+                      ),
+                      title: Text(favoriteList[index].productName!),
+                      subtitle: Text(
+                          '\$${favoriteList[index].price!.toStringAsFixed(0)}'),
+                      trailing: Consumer<FavoriteProvider>(
+                          builder: (context, favoriteProvider, child) {
+                        return IconButton(
+                          icon: Icon(
+                            Icons.favorite,
+                            color:
+                                favoriteProvider.isFavorite(favoriteList[index])
+                                    ? Colors.red
+                                    : Colors.grey,
+                            size: 20,
+                          ),
+                          onPressed: () {
+                            favoriteProvider.addFavorite(favoriteList[index]);
+                          },
+                        );
+                      }),
                     ),
-                    onPressed: () {
-                      favoriteProvider.addFavorite(favoriteList[index]);
-                    },
-                  );
-                }),
-              ),
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
     );
   }
 }
