@@ -40,8 +40,10 @@ class ProductService {
     return products;
   }
 
-  static Future<List<Product>> getAllProductPagination(int page, int size) async {
-    var response = await http.get(Uri.parse("$baseUrl/products?page=$page&size=$size"));
+  static Future<List<Product>> getAllProductPagination(
+      int page, int size) async {
+    var response =
+        await http.get(Uri.parse("$baseUrl/products?page=$page&size=$size"));
     List<Product> products = [];
     if (response.statusCode == 200) {
       var productsJson = json.decode(utf8.decode(response.bodyBytes));

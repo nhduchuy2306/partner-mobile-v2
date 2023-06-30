@@ -105,106 +105,103 @@ class _CustomerWalletState extends State<CustomerWallet> {
   }
 
   Future openDialog() => showDialog(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            title: const Text('Recharge',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            content: StatefulBuilder(
-              builder: (context, setState) {
-                return SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      FutureBuilder<CustomerMemberShip>(
-                        future: widget.customerMemberShips,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            final list = snapshot.data!.walletList!;
-                            return ListBody(
-                              children: list
-                                  .map((e) => RadioListTile(
-                                title: Column(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment
-                                      .start,
-                                  children: [
-                                    Text(e.type!),
-                                    Text(
-                                        '\$${e.balance!.toStringAsFixed(0)}'),
-                                  ],
-                                ),
-                                value: e.id,
-                                groupValue: _selectedWallet,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedWallet =
-                                    value as int;
-                                  });
-                                },
-                                selected:
-                                _selectedWallet == e.id,
-                              ))
-                                  .toList(),
-                            );
-                          } else if (snapshot.hasError) {
-                            return const Text('Error');
-                          } else {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                        },
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: const Text('Recharge',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.bold)),
+          content: StatefulBuilder(
+            builder: (context, setState) {
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FutureBuilder<CustomerMemberShip>(
+                      future: widget.customerMemberShips,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final list = snapshot.data!.walletList!;
+                          return ListBody(
+                            children: list
+                                .map((e) => RadioListTile(
+                                      title: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(e.type!),
+                                          Text(
+                                              '\$${e.balance!.toStringAsFixed(0)}'),
+                                        ],
+                                      ),
+                                      value: e.id,
+                                      groupValue: _selectedWallet,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedWallet = value as int;
+                                        });
+                                      },
+                                      selected: _selectedWallet == e.id,
+                                    ))
+                                .toList(),
+                          );
+                        } else if (snapshot.hasError) {
+                          return const Text('Error');
+                        } else {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      },
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextField(
+                      controller: _amountController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter amount',
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      TextField(
-                        controller: _amountController,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          hintText: 'Enter amount',
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () {
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Cancel')),
+            Consumer<PaymentWalletProvider>(
+                builder: (context, paymentProvider, child) {
+              return TextButton(
+                  onPressed: () async {
+                    final SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    final String? fcmToken = prefs.getString('fcmToken');
+                    RaiseWallet raiseWallet = RaiseWallet(
+                        customerId: widget.userInfo!.uid,
+                        amount: double.parse(_amountController.text),
+                        description: 'Recharge wallet',
+                        token: fcmToken,
+                        walletId: _selectedWallet);
+                    await RaiseRechargeService.raiseRechargeRequest(
+                        raiseWallet);
+
+                    paymentProvider.clear();
                     Navigator.pop(context);
                   },
-                  child: const Text('Cancel')),
-              Consumer<PaymentWalletProvider>(builder:(context, paymentProvider, child){
-                return TextButton(
-                    onPressed: () async {
-                      final SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                      final String? fcmToken =
-                      prefs.getString('fcmToken');
-                      RaiseWallet raiseWallet = RaiseWallet(
-                          customerId: widget.userInfo!.uid,
-                          amount: double.parse(_amountController.text),
-                          description: 'Recharge wallet',
-                          token: fcmToken,
-                          walletId: _selectedWallet);
-                      await RaiseRechargeService.raiseRechargeRequest(
-                          raiseWallet);
-
-                      paymentProvider.clear();
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Recharge'));
-              })
-            ],
-          );
-        });
+                  child: const Text('Recharge'));
+            })
+          ],
+        );
+      });
 }

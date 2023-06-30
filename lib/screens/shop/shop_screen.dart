@@ -48,7 +48,7 @@ class _ShopScreenState extends State<ShopScreen> {
       _page += 1;
       try {
         final listProducts =
-            await ProductService.getAllProductPagination(_page,8);
+            await ProductService.getAllProductPagination(_page, 8);
         if (listProducts.isEmpty) {
           setState(() {
             _hasNextPage = false;
@@ -75,7 +75,8 @@ class _ShopScreenState extends State<ShopScreen> {
     });
 
     try {
-      final listProducts = await ProductService.getAllProductPagination(_page,8);
+      final listProducts =
+          await ProductService.getAllProductPagination(_page, 8);
       if (listProducts.isEmpty) {
         setState(() {
           _hasNextPage = false;

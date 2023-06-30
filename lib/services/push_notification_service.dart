@@ -4,9 +4,11 @@ import 'package:http/http.dart' as http;
 import 'package:partner_mobile/models/push_notification.dart';
 
 class PushNotificationService {
-  static String baseUrl = "https://my-happygear.azurewebsites.net/happygear/api";
+  static String baseUrl =
+      "https://my-happygear.azurewebsites.net/happygear/api";
 
-  static Future<String> createNotification(PushNotification pushNotification) async {
+  static Future<String> createNotification(
+      PushNotification pushNotification) async {
     var response = await http.post(Uri.parse('$baseUrl/notification'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',

@@ -4,7 +4,6 @@ import 'package:partner_mobile/provider/cart_provider.dart';
 import 'package:partner_mobile/provider/favorite_provider.dart';
 import 'package:partner_mobile/styles/app_colors.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ItemCardWidget extends StatelessWidget {
   const ItemCardWidget(
@@ -96,7 +95,8 @@ class ItemCardWidget extends StatelessWidget {
                           );
                         },
                       ),
-                      Consumer<FavoriteProvider>(builder:(context, favoriteProvider, child){
+                      Consumer<FavoriteProvider>(
+                          builder: (context, favoriteProvider, child) {
                         return IconButton(
                           icon: Icon(
                             Icons.favorite,
@@ -105,7 +105,7 @@ class ItemCardWidget extends StatelessWidget {
                                 : Colors.grey,
                             size: 20,
                           ),
-                          onPressed: ()  {
+                          onPressed: () {
                             favoriteProvider.addFavorite(item);
                           },
                         );

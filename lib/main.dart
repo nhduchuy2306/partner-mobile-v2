@@ -28,7 +28,7 @@ void main() async {
     ChangeNotifierProvider(create: (_) => CartProvider()),
     ChangeNotifierProvider(create: (_) => GoogleSignInProvider()),
     ChangeNotifierProvider(create: (_) => PaymentWalletProvider()),
-    ChangeNotifierProvider(create: (_) => FavoriteProvider())
+    ChangeNotifierProvider(create: (_) => FavoriteProvider()),
   ], child: const MainApp()));
 }
 

@@ -101,29 +101,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           centerTitle: true,
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    type: PageTransitionType.bottomToTop,
-                    child: const NotificationScreen(),
-                  ),
-                );
-              },
-              icon: const Badge(
-                label: Text(
-                  "3",
-                  style: TextStyle(color: Colors.white),
-                ),
-                child: Icon(
-                  Icons.notifications,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ],
         ),
         body: RefreshIndicator(
           onRefresh: refresh,

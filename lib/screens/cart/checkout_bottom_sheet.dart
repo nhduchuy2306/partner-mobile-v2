@@ -99,7 +99,8 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
                 context: context,
                 builder: (_) {
                   Future<CustomerMemberShip> customerMembershipFuture =
-                      CustomerMemberShipService.getCustomerMemberShipById(userInfo?.uid ??"1");
+                      CustomerMemberShipService.getCustomerMemberShipById(
+                          userInfo?.uid ?? "1");
                   return AlertDialog(
                     scrollable: true,
                     title: const Text("Payment Wallet"),
@@ -207,7 +208,10 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
                         await SharedPreferences.getInstance();
                     final String? token = prefs.getString('fcmToken');
 
-                    List<int>? listOfWallet = paymentProvider.selectedPaymentWalletIds.map((e) => e.id ?? 0).toList();
+                    List<int>? listOfWallet = paymentProvider
+                        .selectedPaymentWalletIds
+                        .map((e) => e.id ?? 0)
+                        .toList();
 
                     ReduceWallet reduceWallet = ReduceWallet(
                       customerId: userInfo?.uid ?? "1",

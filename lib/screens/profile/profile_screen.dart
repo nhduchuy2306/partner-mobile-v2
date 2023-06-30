@@ -372,7 +372,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   width: 10,
                                 ),
                                 Text(
-                                  "${snapshot.data?.walletList?[0].balance?.toStringAsFixed(0)}",
+                                  "\$${snapshot.data?.walletList?[0].balance?.toStringAsFixed(0)}",
                                   style: const TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
@@ -448,7 +448,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   width: 10,
                                 ),
                                 Text(
-                                  "${snapshot.data?.membership?.totalExpenditure?.toStringAsFixed(0)}",
+                                  "\$${snapshot.data?.membership?.totalExpenditure?.toStringAsFixed(0)}",
                                   style: const TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,

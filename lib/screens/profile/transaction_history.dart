@@ -38,13 +38,68 @@ class _TransactionHistoryState extends State<TransactionHistory> {
             return ListView.builder(
               itemCount: snapshot.data?.length,
               itemBuilder: (context, index) {
-                return Card(
-                  child: ListTile(
-                    title: Text(snapshot.data?[index].partnerName ?? ""),
-                    subtitle: Text(snapshot.data?[index].description ?? ""),
-                    trailing: Text(
-                        '\$${snapshot.data?[index].amount?.toStringAsFixed(0)}' ??
-                            ""),
+                return GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text("Transaction Detail"),
+                        content: ListView.builder(
+                            itemCount:
+                                snapshot.data?[index].transactionList?.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                child: ListTile(
+                                  title: Text(snapshot.data?[index]
+                                          .transactionList?[index].wallet ??
+                                      ""),
+                                  subtitle: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(snapshot
+                                              .data?[index]
+                                              .transactionList?[index]
+                                              .description ??
+                                          ""),
+                                      Text(snapshot
+                                              .data?[index]
+                                              .transactionList?[index]
+                                              .dateCreated ??
+                                          ""),
+                                    ],
+                                  ),
+                                  trailing: Text(
+                                      '\$${snapshot.data?[index].transactionList?[index].amount?.toStringAsFixed(0)}' ??
+                                          ""),
+                                ),
+                              );
+                            }),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Close"),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  child: Card(
+                    child: ListTile(
+                      title: Text(snapshot.data?[index].partnerName ?? ""),
+                      subtitle: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(snapshot.data?[index].description ?? ""),
+                          Text(snapshot.data?[index].dateCreated ?? ""),
+                        ],
+                      ),
+                      trailing: const Icon(Icons.arrow_forward_ios),
+                    ),
                   ),
                 );
               },
