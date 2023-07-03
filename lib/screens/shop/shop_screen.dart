@@ -179,17 +179,17 @@ class _ShopScreenState extends State<ShopScreen> {
               ).then((value) {
                 print(value);
                 if(double.tryParse(value["minPrice"]) == null) {
-                  value["minPrice"] = "0";
+                  value["minPrice"] = "0.0";
                 }
                 if(double.tryParse(value["maxPrice"]) == null) {
-                  value["maxPrice"] = "100000000";
+                  value["maxPrice"] = double.maxFinite.toString();
                 }
                 _onFilter(
                     null,
                     value["categories"],
                     value["brands"],
-                    double.parse(value["minPrice"]),
-                    double.parse(value["maxPrice"]));
+                    double.tryParse(value["minPrice"]),
+                    double.tryParse(value["maxPrice"]));
               });
               setState(() {});
             },
