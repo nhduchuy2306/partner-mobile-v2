@@ -45,9 +45,9 @@ class _ShopScreenState extends State<ShopScreen> {
       _fromPrice = fromPrice;
       _toPrice = toPrice;
       _page = 1;
+      _products.clear();
+      _firstLoad();
     });
-    _products.clear();
-    _firstLoad();
   }
 
   @override
@@ -178,6 +178,12 @@ class _ShopScreenState extends State<ShopScreen> {
                 ),
               ).then((value) {
                 print(value);
+                if(double.tryParse(value["minPrice"]) == null) {
+                  value["minPrice"] = "0";
+                }
+                if(double.tryParse(value["maxPrice"]) == null) {
+                  value["maxPrice"] = "100000000";
+                }
                 _onFilter(
                     null,
                     value["categories"],
@@ -195,8 +201,9 @@ class _ShopScreenState extends State<ShopScreen> {
         onRefresh: () async {
           setState(() {
             _page = 1;
-          });
           _firstLoad();
+          _products.clear();
+          });
         },
         child: _isFirstLoadRunning
             ? const Center(
