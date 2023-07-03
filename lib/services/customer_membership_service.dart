@@ -7,7 +7,6 @@ import 'package:partner_mobile/models/partner_token.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomerMemberShipService {
-  // static String baseUrl = "https://swd-back-end.azurewebsites.net/partner/api";
   static String baseUrl =
       "https://my-happygear.azurewebsites.net/happygear/partner/api";
 

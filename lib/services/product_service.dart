@@ -41,9 +41,58 @@ class ProductService {
   }
 
   static Future<List<Product>> getAllProductPagination(
-      int page, int size) async {
-    var response =
-        await http.get(Uri.parse("$baseUrl/products?page=$page&size=$size"));
+      int page,
+      int limit,
+      String? searchText,
+      List<int>? brandIds,
+      List<int>? categoryIds,
+      double? fromPrice,
+      double? toPrice,
+      String? sort) async {
+    String? listBrand = "";
+    String? listCategory = "";
+    String url = "$baseUrl/products?page=$page&limit=$limit";
+
+    if (brandIds != null && brandIds.isNotEmpty) {
+      for (int i = 0; i < brandIds.length; i++) {
+        if (i == brandIds.length - 1) {
+          listBrand = "${listBrand}brandIds=${brandIds[i]}";
+        } else {
+          listBrand = "${listBrand}brandIds=${brandIds[i]}&";
+        }
+      }
+    }
+
+    if (categoryIds != null && categoryIds.isNotEmpty) {
+      for (int i = 0; i < categoryIds.length; i++) {
+        if (i == categoryIds.length - 1) {
+          listCategory = "${listCategory}categoryIds=${categoryIds[i]}";
+        } else {
+          listCategory = "${listCategory}categoryIds=${categoryIds[i]}&";
+        }
+      }
+    }
+
+    if(searchText != null && searchText.isNotEmpty){
+      url = "$url&search=$searchText";
+    }
+    if(listBrand != null && listBrand.isNotEmpty){
+      url = "$url&$listBrand";
+    }
+    if(listCategory != null && listCategory.isNotEmpty){
+      url = "$url&$listCategory";
+    }
+    if(fromPrice != null){
+      url = "$url&fromPrice=$fromPrice";
+    }
+    if(toPrice != null){
+      url = "$url&toPrice=$toPrice";
+    }
+    if(sort != null && sort.isNotEmpty){
+      url = "$url&sort=$sort";
+    }
+
+    var response = await http.get(Uri.parse(url));
     List<Product> products = [];
     if (response.statusCode == 200) {
       var productsJson = json.decode(utf8.decode(response.bodyBytes));

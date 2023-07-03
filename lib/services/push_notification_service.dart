@@ -9,7 +9,7 @@ class PushNotificationService {
 
   static Future<String> createNotification(
       PushNotification pushNotification) async {
-    var response = await http.post(Uri.parse('$baseUrl/notification'),
+    var response = await http.post(Uri.parse('$baseUrl/notifications'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

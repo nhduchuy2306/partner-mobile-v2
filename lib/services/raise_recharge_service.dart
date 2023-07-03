@@ -5,8 +5,6 @@ import 'package:partner_mobile/models/raise_recharge_wallet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RaiseRechargeService {
-  // static String baseUrl =
-  //     "https://swd-back-end.azurewebsites.net/partner/api/requests";
   static String baseUrl =
       "https://my-happygear.azurewebsites.net/happygear/partner/api";
 
