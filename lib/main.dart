@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:partner_mobile/provider/brand_provider.dart';
+import 'package:partner_mobile/provider/category_provider.dart';
 import 'package:partner_mobile/provider/favorite_provider.dart';
 import 'package:partner_mobile/provider/firebase_message_provider.dart';
 import 'package:partner_mobile/provider/cart_provider.dart';
@@ -29,6 +31,8 @@ void main() async {
     ChangeNotifierProvider(create: (_) => GoogleSignInProvider()),
     ChangeNotifierProvider(create: (_) => PaymentWalletProvider()),
     ChangeNotifierProvider(create: (_) => FavoriteProvider()),
+    ChangeNotifierProvider(create: (_) => CategoryProvider()),
+    ChangeNotifierProvider(create: (_) => BrandProvider())
   ], child: const MainApp()));
 }
 

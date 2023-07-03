@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:partner_mobile/models/brand.dart';
 import 'package:partner_mobile/models/category.dart';
+import 'package:partner_mobile/provider/brand_provider.dart';
+import 'package:partner_mobile/provider/category_provider.dart';
 import 'package:partner_mobile/styles/app_colors.dart';
+import 'package:provider/provider.dart';
 
 class FilterScreen extends StatefulWidget {
   FilterScreen({super.key, this.brands, this.categories});
@@ -14,8 +17,14 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<FilterScreen> {
+  var minPriceEditingController = TextEditingController();
+  var maxPriceEditingController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    var categoryIds = context.watch<CategoryProvider>().selectedCategoryIds;
+    var brandIds = context.watch<BrandProvider>().selectedBrandIds;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -54,20 +63,25 @@ class _FilterScreenState extends State<FilterScreen> {
               future: widget.categories,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return Column(
-                    children: [
-                      const SizedBox(height: 10),
-                      const OptionItem(text: "All"),
-                      const SizedBox(height: 10),
-                      ...snapshot.data!.map((category) {
-                        return Column(
-                          children: [
-                            OptionItem(text: category.categoryName!),
-                            const SizedBox(height: 10),
-                          ],
-                        );
-                      }).toList(),
-                    ],
+                  final list = snapshot.data!;
+                  return ListBody(
+                    children: list.map((category) {
+                      return CheckboxListTile(
+                        title: Text(category.categoryName!),
+                        value: categoryIds.contains(category.categoryId),
+                        onChanged: (value) {
+                          if (value!) {
+                            context
+                                .read<CategoryProvider>()
+                                .addCategoryId(category.categoryId!);
+                          } else {
+                            context
+                                .read<CategoryProvider>()
+                                .removeCategoryId(category.categoryId!);
+                          }
+                        },
+                      );
+                    }).toList(),
                   );
                 } else if (snapshot.hasError) {
                   return Text("${snapshot.error}");
@@ -84,20 +98,25 @@ class _FilterScreenState extends State<FilterScreen> {
               future: widget.brands,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return Column(
-                    children: [
-                      const SizedBox(height: 10),
-                      const OptionItem(text: "All"),
-                      const SizedBox(height: 10),
-                      ...snapshot.data!.map((brand) {
-                        return Column(
-                          children: [
-                            OptionItem(text: brand.brandName!),
-                            const SizedBox(height: 10),
-                          ],
-                        );
-                      }).toList(),
-                    ],
+                  final list = snapshot.data!;
+                  return ListBody(
+                    children: list.map((brand) {
+                      return CheckboxListTile(
+                        title: Text(brand.brandName!),
+                        value: brandIds.contains(brand.brandId),
+                        onChanged: (value) {
+                          if (value!) {
+                            context
+                                .read<BrandProvider>()
+                                .addBrandId(brand.brandId!);
+                          } else {
+                            context
+                                .read<BrandProvider>()
+                                .removeBrandId(brand.brandId!);
+                          }
+                        },
+                      );
+                    }).toList(),
                   );
                 } else if (snapshot.hasError) {
                   return Text("${snapshot.error}");
@@ -120,9 +139,9 @@ class _FilterScreenState extends State<FilterScreen> {
                       borderRadius: BorderRadius.circular(15),
                       border: Border.all(color: AppColors.primaryColor),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
-                        Text(
+                        const Text(
                           "\$",
                           style: TextStyle(
                             color: Colors.black,
@@ -130,11 +149,12 @@ class _FilterScreenState extends State<FilterScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: TextField(
+                            controller: minPriceEditingController,
                             keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: InputBorder.none,
                               hintText: "Min",
                               hintStyle: TextStyle(
@@ -159,9 +179,9 @@ class _FilterScreenState extends State<FilterScreen> {
                       borderRadius: BorderRadius.circular(15),
                       border: Border.all(color: AppColors.primaryColor),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
-                        Text(
+                        const Text(
                           "\$",
                           style: TextStyle(
                             color: Colors.black,
@@ -169,11 +189,12 @@ class _FilterScreenState extends State<FilterScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: TextField(
+                            controller: maxPriceEditingController,
                             keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: InputBorder.none,
                               hintText: "Max",
                               hintStyle: TextStyle(
@@ -198,7 +219,14 @@ class _FilterScreenState extends State<FilterScreen> {
         width: double.maxFinite,
         height: 50,
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context, {
+              "categories": categoryIds,
+              "brands": brandIds,
+              "minPrice": minPriceEditingController.text,
+              "maxPrice": maxPriceEditingController.text,
+            });
+          },
           style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),

@@ -22,18 +22,43 @@ class ShopScreen extends StatefulWidget {
 }
 
 class _ShopScreenState extends State<ShopScreen> {
-  final _baseUrl = "https://my-happygear.azurewebsites.net/happygear/api";
   int _page = 1;
   bool _isFirstLoadRunning = false;
   bool _hasNextPage = true;
   bool _isLoadMoreRunning = false;
-  List<Product> _products = [];
-
+  final List<Product> _products = [];
   late ScrollController _scrollController;
+
+  // declare filter variables
+  String? _search;
+  List<int>? _categories;
+  List<int>? _brands;
+  double? _fromPrice;
+  double? _toPrice;
+
+  void _onFilter(String? search, List<int>? categories, List<int>? brands,
+      double? fromPrice, double? toPrice) {
+    setState(() {
+      _search = search;
+      _categories = categories;
+      _brands = brands;
+      _fromPrice = fromPrice;
+      _toPrice = toPrice;
+      _page = 1;
+    });
+    _products.clear();
+    _firstLoad();
+  }
 
   @override
   void initState() {
     super.initState();
+    _search = null;
+    _categories = null;
+    _brands = null;
+    _fromPrice = null;
+    _toPrice = null;
+
     _firstLoad();
     _scrollController = ScrollController()..addListener(_loadMore);
   }
@@ -44,11 +69,12 @@ class _ShopScreenState extends State<ShopScreen> {
         _isLoadMoreRunning == false) {
       setState(() {
         _isLoadMoreRunning = true;
+        _page += 1;
       });
-      _page += 1;
+
       try {
         final listProducts = await ProductService.getAllProductPagination(
-            _page, 8, null, null, null, null, null, null);
+            _page, 8, _search, _brands, _categories, _fromPrice, _toPrice);
         if (listProducts.isEmpty) {
           setState(() {
             _hasNextPage = false;
@@ -57,7 +83,7 @@ class _ShopScreenState extends State<ShopScreen> {
           setState(() {
             _hasNextPage = true;
           });
-          _products = listProducts;
+          _products.addAll(listProducts);
         }
       } catch (e) {
         print("Something went wrong: $e");
@@ -76,7 +102,11 @@ class _ShopScreenState extends State<ShopScreen> {
 
     try {
       final listProducts = await ProductService.getAllProductPagination(
-          _page, 8, null, null, null, null, null, null);
+          _page, 8, _search, _brands, _categories, _fromPrice, _toPrice);
+
+      for (var product in listProducts) {
+        print(product.productId);
+      }
       if (listProducts.isEmpty) {
         setState(() {
           _hasNextPage = false;
@@ -85,7 +115,7 @@ class _ShopScreenState extends State<ShopScreen> {
         setState(() {
           _hasNextPage = true;
         });
-        _products = listProducts;
+        _products.addAll(listProducts);
       }
     } catch (e) {
       print("Something went wrong: $e");
@@ -146,7 +176,16 @@ class _ShopScreenState extends State<ShopScreen> {
                     brands: getBrands(),
                   ),
                 ),
-              );
+              ).then((value) {
+                print(value);
+                _onFilter(
+                    null,
+                    value["categories"],
+                    value["brands"],
+                    double.parse(value["minPrice"]),
+                    double.parse(value["maxPrice"]));
+              });
+              setState(() {});
             },
             icon: const Icon(Icons.filter_list, color: Colors.black),
           ),

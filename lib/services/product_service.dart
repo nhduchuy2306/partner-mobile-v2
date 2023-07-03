@@ -47,8 +47,7 @@ class ProductService {
       List<int>? brandIds,
       List<int>? categoryIds,
       double? fromPrice,
-      double? toPrice,
-      String? sort) async {
+      double? toPrice) async {
     String? listBrand = "";
     String? listCategory = "";
     String url = "$baseUrl/products?page=$page&limit=$limit";
@@ -87,9 +86,6 @@ class ProductService {
     }
     if(toPrice != null){
       url = "$url&toPrice=$toPrice";
-    }
-    if(sort != null && sort.isNotEmpty){
-      url = "$url&sort=$sort";
     }
 
     var response = await http.get(Uri.parse(url));
