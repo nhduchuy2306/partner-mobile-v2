@@ -9,7 +9,7 @@ class ProductDescriptionService {
 
   static Future<ProductDescription> getDescriptionByProductId(int id) async {
     var response =
-        await http.get(Uri.parse('$baseUrl/descriptions/product/$id'));
+        await http.get(Uri.parse('$baseUrl/products/$id/description'));
     ProductDescription productDescription = ProductDescription();
     if (response.statusCode == 200) {
       var productDescriptionJson = json.decode(utf8.decode(response.bodyBytes));

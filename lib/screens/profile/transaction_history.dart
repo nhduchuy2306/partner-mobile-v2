@@ -36,71 +36,69 @@ class _TransactionHistoryState extends State<TransactionHistory> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
-              itemCount: snapshot.data?.length,
+              itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text("Transaction Detail"),
-                        content: ListView.builder(
-                            itemCount:
-                                snapshot.data?[index].transactionList?.length,
-                            itemBuilder: (context, index) {
-                              return Card(
-                                child: ListTile(
-                                  title: Text(snapshot.data?[index]
-                                          .transactionList?[index].wallet ??
-                                      ""),
-                                  subtitle: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(snapshot
-                                              .data?[index]
-                                              .transactionList?[index]
-                                              .description ??
-                                          ""),
-                                      Text(snapshot
-                                              .data?[index]
-                                              .transactionList?[index]
-                                              .dateCreated ??
-                                          ""),
-                                    ],
-                                  ),
-                                  trailing: Text(
-                                      '\$${snapshot.data?[index].transactionList?[index].amount?.toStringAsFixed(0)}' ??
-                                          ""),
-                                ),
-                              );
-                            }),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text("Close"),
-                          ),
-                        ],
+                final item = snapshot.data![index];
+                final itemColor =
+                    item?.type == "true" ? Colors.green : Colors.red;
+                final itemIcon = item?.type == "true"
+                    ? Text("Income", style: TextStyle(color: itemColor))
+                    : Text("Expense", style: TextStyle(color: itemColor));
+                return Container(
+                  margin: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.grey,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
                       ),
-                    );
-                  },
-                  child: Card(
-                    child: ListTile(
-                      title: Text(snapshot.data?[index].partnerName ?? ""),
+                    ],
+                  ),
+                  child: ExpansionTile(
+                      title: itemIcon,
                       subtitle: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(snapshot.data?[index].description ?? ""),
-                          Text(snapshot.data?[index].dateCreated ?? ""),
+                          Text(item?.description ?? ""),
+                          Text(item?.dateCreated ?? ""),
                         ],
                       ),
-                      trailing: const Icon(Icons.arrow_forward_ios),
-                    ),
-                  ),
+                      children: [
+                        ListView.builder(
+                          shrinkWrap: true,
+                          // Ensure the ListView takes only the necessary space
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: item.transactionList!.length,
+                          itemBuilder: (context, index) {
+                            final itemTransaction =
+                                item.transactionList![index];
+                            final colorTransaction =
+                                itemTransaction?.type == "true"
+                                    ? Colors.green
+                                    : Colors.red;
+                            return ListTile(
+                              title: Text(itemTransaction?.wallet ?? ""),
+                              subtitle: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(itemTransaction?.description ?? ""),
+                                  Text(itemTransaction?.dateCreated ?? ""),
+                                ],
+                              ),
+                              trailing: Text(
+                                '\$${itemTransaction?.amount?.toStringAsFixed(0)}' ??
+                                    "",
+                                style: TextStyle(color: colorTransaction),
+                              ),
+                            );
+                          },
+                        ),
+                      ]),
                 );
               },
             );
@@ -110,6 +108,45 @@ class _TransactionHistoryState extends State<TransactionHistory> {
           return const Center(child: CircularProgressIndicator());
         },
       ),
+    );
+  }
+}
+
+class TransactionList extends StatefulWidget {
+  TransactionList({super.key, this.transactionList});
+
+  List<Transaction>? transactionList;
+
+  @override
+  State<TransactionList> createState() => _TransactionListState();
+}
+
+class _TransactionListState extends State<TransactionList> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: widget.transactionList!.length,
+      itemBuilder: (context, index) {
+        final itemTransaction = widget.transactionList![index];
+        print(itemTransaction);
+        final color =
+            itemTransaction?.type == "true" ? Colors.green : Colors.red;
+        return ListTile(
+          title: Text(itemTransaction?.wallet ?? ""),
+          subtitle: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(itemTransaction?.description ?? ""),
+              Text(itemTransaction?.dateCreated ?? ""),
+            ],
+          ),
+          trailing: Text(
+            '\$${itemTransaction?.amount?.toStringAsFixed(0)}' ?? "",
+            style: TextStyle(color: color),
+          ),
+        );
+      },
     );
   }
 }
