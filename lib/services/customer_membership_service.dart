@@ -60,4 +60,23 @@ class CustomerMemberShipService {
       throw Exception('Failed to create customer');
     }
   }
+
+  static Future<void> registerCustomerMemberShip(CustomerInfo customerInfo) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? partnerTokenFromAdmin = prefs.getString('partnerTokenFromAdmin');
+    var url = Uri.parse("$baseUrl/customers/membership");
+    var response = await http.post(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Authorization":
+          "Bearer ${partnerTokenFromAdmin ?? 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwYXJ0bmVyQGdtYWlsLmNvbSIsImlhdCI6MTY4NzE0MDkyOCwiZXhwIjoxNzA0NDIwOTI4fQ.y5QArBBgjW0BGJH2B9hnFrdMQ92kQmAtSRX-vMKimhahoGBiu2YWGY9nGEmLT8K7GpUbTpT3jaEPCtL-NaRs7A'}"
+        },
+        body: jsonEncode(customerInfo.toJson()));
+    if (response.statusCode == 200) {
+      print('Customer created successfully');
+    } else {
+      print('Failed to create customer');
+      throw Exception('Failed to create customer');
+    }
+  }
 }

@@ -106,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               image: user.photoUrl,
                               phone: "");
                           await UserService.register(userInfo);
-                          await CustomerMemberShipService.registerCustomer(
+                          await CustomerMemberShipService.registerCustomerMemberShip(
                               customerInfo);
                         }
                       }

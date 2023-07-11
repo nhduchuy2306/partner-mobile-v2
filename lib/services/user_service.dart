@@ -8,7 +8,7 @@ class UserService {
   static const baseUrl = "https://my-happygear.azurewebsites.net/happygear/api";
 
   static Future<User?> register(UserInfo userInfo) async {
-    var response = await http.post(Uri.parse('$baseUrl/users/register'),
+    var response = await http.post(Uri.parse('$baseUrl/users/google/auth'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
