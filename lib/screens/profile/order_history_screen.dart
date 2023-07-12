@@ -36,9 +36,17 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Order History'),
-        backgroundColor: AppColors.primaryColor,
+        title:
+            const Text('Order History', style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -71,6 +79,11 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                       margin: const EdgeInsets.all(15),
                       shadowColor: Colors.grey,
                       surfaceTintColor: Colors.grey,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      borderOnForeground: true,
+                      elevation: 10,
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.8,
                         margin: const EdgeInsets.all(15),
@@ -98,7 +111,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                                       Text(
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 4,
-                                          snapshot.data?[index].productName ?? "",
+                                          snapshot.data?[index].productName ??
+                                              "",
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 12),
