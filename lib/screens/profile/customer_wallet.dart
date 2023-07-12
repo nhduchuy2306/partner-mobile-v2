@@ -183,7 +183,29 @@ class _CustomerWalletState extends State<CustomerWallet> {
             Consumer<PaymentWalletProvider>(
                 builder: (context, paymentProvider, child) {
               return TextButton(
+                  // show loading indicator
                   onPressed: () async {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          child: Container(
+                            padding: const EdgeInsets.all(16),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CircularProgressIndicator(),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text("Loading"),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
                     final SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     final String? fcmToken = prefs.getString('fcmToken');
@@ -197,7 +219,10 @@ class _CustomerWalletState extends State<CustomerWallet> {
                         raiseWallet);
 
                     paymentProvider.clear();
-                    Navigator.pop(context);
+                    Future.delayed(const Duration(seconds: 2), () {
+                      Navigator.pop(context); //pop dialog
+                      Navigator.pop(context); //pop dialog
+                    });
                   },
                   child: const Text('Recharge'));
             })

@@ -204,6 +204,24 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
                           "Your balance is not enough, add more or recharge");
                       return;
                     }
+
+                    // show loading dialog
+                    showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (BuildContext context) {
+                        return const Dialog(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CircularProgressIndicator(),
+                              Text("Loading"),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+
                     final SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     final String? token = prefs.getString('fcmToken');

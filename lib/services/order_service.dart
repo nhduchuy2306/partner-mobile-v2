@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:partner_mobile/models/order.dart';
+import 'package:partner_mobile/models/order_detail.dart';
 import 'package:partner_mobile/models/order_request.dart';
 
 class OrderService {
@@ -38,6 +39,24 @@ class OrderService {
     } else {
       print('Failed to retrieve orders');
       return orders;
+    }
+  }
+
+  static Future<List<OrderDetail>> getOrderDetailByUsername(String username) async {
+    var response = await http.get(Uri.parse('$baseUrl/users/$username/order-details'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+    List<OrderDetail> orderDetails = [];
+    if (response.statusCode == 200) {
+      var orderDetailsJson = json.decode(utf8.decode(response.bodyBytes));
+      for (var orderDetailJson in orderDetailsJson) {
+        orderDetails.add(OrderDetail.fromJson(orderDetailJson));
+      }
+      return orderDetails;
+    } else {
+      print('Failed to retrieve order details');
+      return orderDetails;
     }
   }
 }
