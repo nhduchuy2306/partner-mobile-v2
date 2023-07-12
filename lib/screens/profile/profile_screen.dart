@@ -409,12 +409,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       width:
                                           MediaQuery.of(context).size.width / 5,
                                       child: LinearProgressIndicator(
-                                        value: ((snapshot.data?.membership
+                                        value: snapshot.data?.nextLevel
+                                                    ?.condition ==
+                                                null
+                                            ? (snapshot.data?.membership
                                                     ?.totalExpenditure ??
-                                                1) /
-                                            (snapshot.data?.nextLevel
-                                                    ?.condition ??
-                                                2)),
+                                                1)
+                                            : ((snapshot.data?.membership
+                                                        ?.totalExpenditure ??
+                                                    1) /
+                                                (snapshot.data?.nextLevel
+                                                        ?.condition ??
+                                                    2)),
                                         backgroundColor: Colors.grey[300],
                                         valueColor:
                                             const AlwaysStoppedAnimation(
