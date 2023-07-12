@@ -208,15 +208,21 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
                     // show loading dialog
                     showDialog(
                       context: context,
-                      barrierDismissible: true,
+                      barrierDismissible: false,
                       builder: (BuildContext context) {
-                        return const Dialog(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CircularProgressIndicator(),
-                              Text("Loading"),
-                            ],
+                        return Dialog(
+                          child: Container(
+                            padding: const EdgeInsets.all(16),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CircularProgressIndicator(),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text("Loading"),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -265,6 +271,7 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
                           print(value);
                         });
 
+                        Navigator.pop(context);
                         Navigator.pop(context);
                         showMessageDialog("Place Order Success",
                             "Your order has been placed successfully.");
