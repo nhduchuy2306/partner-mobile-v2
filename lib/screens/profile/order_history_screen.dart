@@ -72,7 +72,9 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                       shadowColor: Colors.grey,
                       surfaceTintColor: Colors.grey,
                       child: Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
                         margin: const EdgeInsets.all(15),
+                        padding: const EdgeInsets.all(10),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.end,
@@ -85,36 +87,45 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                                   width: 100,
                                   height: 100,
                                 ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      snapshot.data?[index].productName ?? "",
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15),
-                                    ),
-                                    Text(
-                                      'x${snapshot.data?[index].quantity}',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15),
-                                    ),
-                                    Text(
-                                      '\$${total?.toStringAsFixed(0)}',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15),
-                                    ),
-                                  ],
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 4,
+                                          snapshot.data?[index].productName ?? "",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12),
+                                          textAlign: TextAlign.left),
+                                      Text(
+                                          overflow: TextOverflow.ellipsis,
+                                          'x${snapshot.data?[index].quantity}',
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12),
+                                          textAlign: TextAlign.left),
+                                      Text(
+                                          overflow: TextOverflow.ellipsis,
+                                          '\$${total?.toStringAsFixed(0)}',
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12),
+                                          textAlign: TextAlign.left),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
                             Text(
                               'Total: \$${snapshot.data?[index].price?.toStringAsFixed(0)}',
                               style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 15),
+                                  fontWeight: FontWeight.bold, fontSize: 12),
                             ),
                             Container(
                               width: double.infinity,
