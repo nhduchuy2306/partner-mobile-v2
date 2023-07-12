@@ -45,38 +45,109 @@ class _CustomerWalletState extends State<CustomerWallet> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('My Wallet'),
-          backgroundColor: AppColors.primaryColor,
+          title: const Text('My Wallet', style: TextStyle(color: Colors.black)),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_outlined),
+            color: Colors.black,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
-        body: Container(
-          margin: const EdgeInsets.all(12),
-          child: FutureBuilder<CustomerMemberShip>(
-              future: widget.customerMemberShips,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                      itemCount: snapshot.data!.walletList!.length,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          child: ListTile(
-                            title:
-                                Text(snapshot.data!.walletList![index].type!),
-                            subtitle: Text(
-                                '\$${snapshot.data!.walletList![index].balance!.toStringAsFixed(0)}'),
-                            trailing: Text(
-                                '\$${snapshot.data!.walletList![index].totalReceipt!.toStringAsFixed(0)}'),
-                          ),
-                        );
-                      });
-                } else if (snapshot.hasError) {
-                  return const Text('Error');
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              }),
+        body: SingleChildScrollView(
+          child: Container(
+            margin: const EdgeInsets.all(12),
+            child: FutureBuilder<CustomerMemberShip>(
+                future: widget.customerMemberShips,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: snapshot.data!.walletList!.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.grey,
+                                  blurRadius: 5,
+                                  offset: Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: ExpansionTile(
+                              expandedAlignment: Alignment.centerLeft,
+                              childrenPadding: const EdgeInsets.all(12),
+                              expandedCrossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                              title: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    snapshot.data!.walletList![index].type!,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    '\$${snapshot.data!.walletList![index].balance!.toStringAsFixed(0)}',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              children: [
+                                Text(
+                                  'Total Receipt: \$${snapshot.data!.walletList![index].totalReceipt!.toStringAsFixed(0)}',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  'Total Expenditure: \$${snapshot.data!.walletList![index].totalExpenditure!.toStringAsFixed(0)}',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  'Date Created: ${snapshot.data!.walletList![index].dateCreated}',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        });
+                  } else if (snapshot.hasError) {
+                    return const Text('Error');
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }),
+          ),
         ),
         bottomNavigationBar: Row(
           children: [
@@ -217,58 +288,52 @@ class _CustomerWalletState extends State<CustomerWallet> {
                   Navigator.pop(context);
                 },
                 child: const Text('Cancel')),
-            Consumer<PaymentWalletProvider>(
-                builder: (context, paymentProvider, child) {
-              return TextButton(
-                  // show loading indicator
-                  onPressed: () async {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (BuildContext context) {
-                        return Dialog(
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                CircularProgressIndicator(),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text("Loading"),
-                              ],
-                            ),
+            TextButton(
+                // show loading indicator
+                onPressed: () async {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return Dialog(
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CircularProgressIndicator(),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text("Loading"),
+                            ],
                           ),
-                        );
-                      },
-                    );
-                    final SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
-                    final String? fcmToken = prefs.getString('fcmToken');
-                    RaiseWallet raiseWallet = RaiseWallet(
-                        customerId: widget.userInfo!.uid,
-                        amount: double.parse(_amountController.text),
-                        description: 'Recharge wallet',
-                        token: fcmToken,
-                        walletId: _selectedWallet);
-                    await RaiseRechargeService.raiseRechargeRequest(
-                        raiseWallet);
+                        ),
+                      );
+                    },
+                  );
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  final String? fcmToken = prefs.getString('fcmToken');
+                  RaiseWallet raiseWallet = RaiseWallet(
+                      customerId: widget.userInfo!.uid,
+                      amount: double.parse(_amountController.text),
+                      description: 'Recharge wallet',
+                      token: fcmToken,
+                      walletId: _selectedWallet);
 
-                    paymentProvider.clear();
-                    Future.delayed(const Duration(seconds: 2), () {
-                      Navigator.pop(context); //pop dialog
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PaymentSuccess(
-                                    raiseWallet: raiseWallet,
-                                  )),
-                          (route) => false);
-                    });
-                  },
-                  child: const Text('Recharge'));
-            })
+                  Future.delayed(const Duration(seconds: 2), () {
+                    Navigator.pop(context); //pop dialog
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PaymentSuccess(
+                                  raiseWallet: raiseWallet,
+                                )),
+                        (route) => false);
+                  });
+                },
+                child: const Text('Recharge')),
           ],
         );
       });
@@ -388,7 +453,7 @@ class _CustomerWalletState extends State<CustomerWallet> {
                         description: 'Recharge wallet',
                         token: fcmToken,
                         walletId: _selectedWallet);
-                    paymentProvider.clear();
+
                     Future.delayed(const Duration(seconds: 2), () {
                       Navigator.pop(context); //pop dialog
                       Navigator.pushAndRemoveUntil(
