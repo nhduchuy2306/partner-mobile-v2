@@ -16,6 +16,7 @@ class _AddWalletSuccessState extends State<AddWalletSuccess> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _pushNoti();
   }
 
   void _pushNoti() async {
