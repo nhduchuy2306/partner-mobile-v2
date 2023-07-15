@@ -118,40 +118,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             settingBar(
                 title: const Text(
-                  "Add more Wallet",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: const Text(
-                  "Wallet Management",
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Color(0xff7C7C7C),
-                      fontWeight: FontWeight.normal),
-                ),
-                leading: const Icon(
-                  Icons.add_circle_outline,
-                  color: Colors.black,
-                  size: 30,
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      type: PageTransitionType.bottomToTop,
-                      child: WalletManagement(
-                          userInfo: userInfo,
-                          customerMemberShips: customerMemberShips),
-                    ),
-                  );
-                }),
-            const Divider(
-              thickness: 1,
-            ),
-            settingBar(
-                title: const Text(
                   "Transaction History",
                   style: TextStyle(
                     fontSize: 18,

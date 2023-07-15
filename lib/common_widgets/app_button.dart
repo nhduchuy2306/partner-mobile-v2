@@ -45,8 +45,8 @@ class ButtonWidget extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(roundness),
       ),
-      child: GestureDetector(
-        onTap: onTap as void Function()?,
+      child: MaterialButton(
+        onPressed: onTap as void Function()?,
         child: Text(
           text,
           style: TextStyle(

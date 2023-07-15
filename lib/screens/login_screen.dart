@@ -58,8 +58,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: AppColors.primaryColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: GestureDetector(
-                    onTap: () async {
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    onPressed: () async {
                       showDialog(
                         context: context,
                         builder: (context) => const Center(
