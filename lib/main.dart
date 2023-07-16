@@ -29,6 +29,7 @@ void main() async {
   print('FCM Token: ${prefs.getString('fcmToken')}');
   print('Token Admin: ${prefs.getString('partnerTokenFromAdmin')}');
   print("partnerTokenFromAdmin: ${prefs.getString('partnerTokenFromAdmin')}");
+  print("isPaymentSuccess: ${prefs.getBool('isPaymentSuccess')}");
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => CartProvider()),
