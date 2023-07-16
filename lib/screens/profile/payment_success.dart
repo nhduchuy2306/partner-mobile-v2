@@ -32,9 +32,6 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
     });
     if (isPaymentSuccess) {
       prefs.remove('isPaymentSuccess');
-    }
-    print('isPaymentSuccess-----------: $isPaymentSuccess');
-    if (isPaymentSuccess) {
       await RaiseRechargeService.raiseRechargeRequest(widget.raiseWallet!);
     }
   }
