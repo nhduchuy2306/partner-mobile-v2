@@ -9,6 +9,7 @@ class RaiseRechargeService {
       "https://my-happygear.azurewebsites.net/happygear/partner/api";
 
   static Future<void> raiseRechargeRequest(RaiseWallet raiseWallet) async {
+    // String baseUrl = "https://swd-back-end.azurewebsites.net/partner/api";
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String partnerTokenFromAdmin = prefs.getString('partnerTokenFromAdmin') ??
         'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwYXJ0bmVyQGdtYWlsLmNvbSIsImlhdCI6MTY4NzE0MDkyOCwiZXhwIjoxNzA0NDIwOTI4fQ.y5QArBBgjW0BGJH2B9hnFrdMQ92kQmAtSRX-vMKimhahoGBiu2YWGY9nGEmLT8K7GpUbTpT3jaEPCtL-NaRs7A';
