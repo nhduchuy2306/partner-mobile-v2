@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:partner_mobile/helpers/constant_value.dart';
 import 'package:partner_mobile/models/customer_info.dart';
+import 'package:partner_mobile/models/customer_membership.dart';
 import 'package:partner_mobile/models/partner_token.dart';
 import 'package:partner_mobile/models/user.dart';
 import 'package:partner_mobile/models/user_info.dart';
@@ -11,6 +12,7 @@ import 'package:partner_mobile/provider/google_signin_provider.dart';
 import 'package:partner_mobile/screens/dashboard/dashboard_screen.dart';
 import 'package:partner_mobile/services/customer_membership_service.dart';
 import 'package:partner_mobile/services/user_service.dart';
+import 'package:partner_mobile/services/wallet_service.dart';
 import 'package:partner_mobile/styles/app_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,6 +25,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   String image = "assets/images/gamepad.png";
+  int memberShipId = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -112,11 +115,20 @@ class _LoginScreenState extends State<LoginScreen> {
                               image: user.photoUrl,
                               phone: "");
                           await UserService.register(userInfo);
-                          await CustomerMemberShipService.registerCustomerMemberShip(
-                              customerInfo);
+                          await CustomerMemberShipService
+                              .registerCustomerMemberShip(customerInfo);
+                          CustomerMemberShip customer =
+                              await CustomerMemberShipService
+                                  .getCustomerMemberShipById(user.id ?? "");
+
+                          setState(() {
+                            memberShipId = customer.membership?.id ?? 0;
+                          });
+
+                          await WalletService.createWallet(memberShipId, 2);
                         }
                       }
-                      Future.delayed(const Duration(seconds: 1), () {
+                      Future.delayed(const Duration(seconds: 0), () {
                         Navigator.pushAndRemoveUntil(
                             context,
                             PageTransition(
