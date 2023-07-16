@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:partner_mobile/models/raise_recharge_wallet.dart';
+import 'package:partner_mobile/provider/dynamic_link_provider.dart';
 import 'package:partner_mobile/screens/dashboard/dashboard_screen.dart';
 import 'package:partner_mobile/services/raise_recharge_service.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PaymentSuccess extends StatefulWidget {
   const PaymentSuccess({super.key, this.raiseWallet});
@@ -13,6 +16,8 @@ class PaymentSuccess extends StatefulWidget {
 }
 
 class _PaymentSuccessState extends State<PaymentSuccess> {
+  bool isPaymentSuccess = false;
+
   @override
   void initState() {
     super.initState();
@@ -20,7 +25,16 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
   }
 
   void _raiseRechargeRequest() async {
-    if (widget.raiseWallet != null) {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    isPaymentSuccess = prefs.getBool('isPaymentSuccess') ?? false;
+    setState(() {
+      isPaymentSuccess = prefs.getBool('isPaymentSuccess') ?? false;
+    });
+    if (isPaymentSuccess) {
+      prefs.remove('isPaymentSuccess');
+    }
+    print('isPaymentSuccess-----------: $isPaymentSuccess');
+    if (isPaymentSuccess) {
       await RaiseRechargeService.raiseRechargeRequest(widget.raiseWallet!);
     }
   }
@@ -47,26 +61,49 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
               size: 30,
             ),
           )),
-      body: const Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.check_circle,
-            size: 200,
-            color: Colors.green,
-          ),
-          SizedBox(height: 20),
-          Text(
-            'Payment Success',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+      body: isPaymentSuccess == true
+          ? const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.check_circle,
+                    size: 200,
+                    color: Colors.green,
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'Payment Success',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error,
+                    size: 200,
+                    color: Colors.red,
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'Payment Fail, Please try again',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      )),
     );
   }
 }
