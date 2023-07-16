@@ -20,7 +20,7 @@ class RaiseRechargeService {
           'Authorization': 'Bearer $partnerTokenFromAdmin'
         },
         body: jsonEncode(raiseWallet.toJson()));
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       print('Recharge request raised successfully');
     } else {
       print('Failed to raise recharge request');

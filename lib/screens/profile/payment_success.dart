@@ -38,69 +38,80 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          title: const Text('Payment Success'),
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const DashBoardScreen()),
-                (route) => false,
-              );
-            },
-            icon: const Icon(
-              Icons.close,
-              color: Colors.black,
-              size: 30,
-            ),
-          )),
-      body: isPaymentSuccess == true
-          ? const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.check_circle,
-                    size: 200,
-                    color: Colors.green,
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    'Payment Success',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const DashBoardScreen()),
+          (route) => false,
+        );
+        return Future.value(false);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            title: const Text('Payment Success'),
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const DashBoardScreen()),
+                  (route) => false,
+                );
+              },
+              icon: const Icon(
+                Icons.close,
+                color: Colors.black,
+                size: 30,
               ),
-            )
-          : const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error,
-                    size: 200,
-                    color: Colors.red,
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    'Payment Fail, Please try again',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+            )),
+        body: isPaymentSuccess == true
+            ? const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.check_circle,
+                      size: 200,
+                      color: Colors.green,
                     ),
-                  ),
-                ],
+                    SizedBox(height: 20),
+                    Text(
+                      'Payment Success',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error,
+                      size: 200,
+                      color: Colors.red,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Payment Fail, Please try again',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
+      ),
     );
   }
 }
